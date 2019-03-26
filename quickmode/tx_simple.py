@@ -54,15 +54,26 @@ radio_tx, radio_rx = configure_radios(channel_TX, channel_RX)
 packet_manager = PacketManager(config.document_path)
 packets = packet_manager.create()
 print(packets[0])
+print("TX dr: ")
+print(radio_tx.setDataRate(RF24_250KBPS))
+print(radio_tx.getDataRate())
+print("radio.isValid()="+str(radio_tx.isValid()))
+print("RX dr: ")
+print(radio_rx.setDataRate(RF24_250KBPS))
+print(radio_rx.getDataRate())
+print("radio.isValid()="+str(radio_rx.isValid()))
+
+
 # loop over the packets to be sent
 for packet in packets:
     # First, stop listening so we can talk.
-    radio_tx.stopListening()
-
+    print("I'm in")
+    #radio_tx.stopListening()
+    
     # Take the time, and send it.  This will block until complete
-    print('Now sending message: {} ... '.format(packet), end="")
+    #print('Now sending message: {} ... '.format(packet), end="")
     radio_tx.write(packet)
-
+    
     # Now, continue listening
     radio_rx.startListening()
 
@@ -75,7 +86,7 @@ for packet in packets:
 
     while not ack_received:
         while (not radio_rx.available()) and (not timeout):
-            if (millis() - started_waiting_at) > config.timeout_time:
+            if (millis() - started_waiting_at) > 500:
                 timeout = True
 
         # Describe the results
