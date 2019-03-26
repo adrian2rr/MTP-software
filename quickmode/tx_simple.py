@@ -53,7 +53,7 @@ radio_tx, radio_rx = configure_radios(channel_TX, channel_RX)
 
 packet_manager = PacketManager(config.document_path)
 packets = packet_manager.create()
-
+print(packets[0])
 # loop over the packets to be sent
 for packet in packets:
     # First, stop listening so we can talk.
