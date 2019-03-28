@@ -1,9 +1,12 @@
+import zlib
+
 class Input(object):
     def __init__(self, document):
         super(Input, self).__init__()
         self.document = document
         self.payload_size = 32
         self.data_size = self.payload_size
+        self.use_compression = False
 
     def create(self):
         packets = []
@@ -11,10 +14,13 @@ class Input(object):
             data_to_tx = doc.read()
 
         fragments = self._fragment_file(data_to_tx)
-        compressed_fragments = self._compress_fragments(fragments)
+        if self.use_compression:
+            compressed_fragments = self._compress_fragments(fragments)
+        else:
+            compressed_fragments = fragments
 
-        for cf in compressed_fragments:
-            packet = self._create_packet(cf)
+        for frame_id, cf in enumerate(compressed_fragments):
+            packet = self._create_packet(cf, frame_id)
             packets.append(packet)
 
         return packets
@@ -29,21 +35,18 @@ class Input(object):
 
     def _compress_fragments(self, fragments):
         """
-
+        Compress each fragmented data using zlib library
         :param fragments:
         :return: list of compressed fragments
         """
-        # TODO: Implement compression function
-        # now returns fragments without compression
-        compressed_fragments = fragments
+        compressed_fragments = [zlib.compress(fragment) for fragment in fragments]
         return compressed_fragments
 
-
-    def _create_packet(self, compressed_fragment):
+    def _create_packet(self, compressed_fragment, frame_id, type_of_frame = "data"):
         """
         Header
         *-------------------------------------------------*
-        | Type_of_frame | Frame_ID | Payload_length | EOT |
+        | Type_of_frame | Frame_ID | EOT | Payload_length |
         *-------------------------------------------------*
 
         Payload
@@ -56,9 +59,28 @@ class Input(object):
         | CRC            |
         *----------------*
 
-        Header: Type_of_frame (ACK, DATA), Frame_ID, Payload_length, EOT (End of transmission)
+        Header: Type_of_frame (ACK, NACK, DATA), Frame_ID, Payload_length, EOT (End of transmission)
         Payload: Data
         CRC:
         :return:packet
         """
+        # TODO: Rules of ifs so that the correct index is assigned to each flag
+        # TODO: Last fragment should include padding
+        packet = []
+        header = []
+        if type_of_frame == "data":
+            tf = 0
+        else:
+            tf = 1
+
+        header.append(tf)
+        header.append(frame_id)
+        payload_length = len(compressed_fragment)
+        header.append(payload_length)
+
+        packet.extend(header)
+        packet.append(compressed_fragment)
+
+        return packet
+
 
