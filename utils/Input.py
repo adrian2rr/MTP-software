@@ -20,25 +20,21 @@ class Input(object):
         else:
             compressed_fragments = fragments
         
-        crc_fragments = self._generate_crc(compressed_fragments)
-        i = 0
         for frame_id, cf in enumerate(compressed_fragments):
-            packet = self._create_packet(cf, frame_id, crc_fragments[i])
+            packet = self._create_packet(cf, frame_id, self._generate_crc(cf))
             packets.append(packet)
-            i += 1
+            
 
         return packets
 
-    def _generate_crc(self, bytes_list):
-        crc_out = []
-        for line in bytes_list:
-            crc = crc8.crc8()
-            crc.update(line)
-            # using digest() to return bites in the format b'\xfb'
-            # to get only the hexadecimal value 'fb' use hexdigest()
-            crc_out.append(crc.digest())
-
-        return crc_out
+    def _generate_crc(self, line):
+        
+        crc = crc8.crc8()
+        crc.update(line)
+        # using digest() to return bites in the format b'\xfb'
+        # to get only the hexadecimal value 'fb' use hexdigest()
+            
+        return crc.digest()
 
     def _fragment_file(self, data_to_tx):
         """
