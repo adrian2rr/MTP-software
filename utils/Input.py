@@ -33,7 +33,6 @@ class Input(object):
         crc.update(line)
         # using digest() to return bites in the format b'\xfb'
         # to get only the hexadecimal value 'fb' use hexdigest()
-            
         return crc.digest()
 
     def _fragment_file(self, data_to_tx):
