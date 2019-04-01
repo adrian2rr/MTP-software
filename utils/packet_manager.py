@@ -1,9 +1,9 @@
 import zlib
 import crc8
 
-class Input(object):
+class PacketManager(object):
     def __init__(self, document):
-        super(Input, self).__init__()
+        super(PacketManager, self).__init__()
         self.document = document
         self.payload_size = 32
         self.data_size = self.payload_size
