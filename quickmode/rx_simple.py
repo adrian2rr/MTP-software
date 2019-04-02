@@ -48,7 +48,7 @@ radio_tx, radio_rx = configure_radios()
 
 radio_rx.startListening()
 
-frames = []
+frames = {}
 
 last_packet = False
 num_packets = 0
@@ -65,11 +65,18 @@ while 1:
             # Insert the frame with its respective id
             frame_id = int(receive_payload[:7], 2)
 
-            frames = frames + [(frame_id, receive_payload)]
+            # if the frame is consecutive with the last one
+            # if not frames
+            if frame_id == 1 or frames[len(frames)-1] == frame_id - 1:
+                frames.update({str(frame_id): receive_payload})
+            else:
+                while frames[len(frames)-1] != frame_id - 1:
+                    if frames.get(str(frame_id)) is None:
+                        frames.update({str(frame_id): receive_payload})
+                    else:
+                        frames.update({str(len(frames)+1): None})
 
-            sorted(frames)
-
-            # num_packets += 1
+            # sorted(frames)
 
             # First, stop listening so we can talk
             radio_rx.stopListening()
@@ -82,10 +89,21 @@ while 1:
             if not last_packet:
                 pass
             else:
+                # Check all packets are sent correctly
+                for id_frame, value in frames:
+                    if frames[id_frame] is None:
+                        # if it finds some value None it asks for this packet
+                        # TODO: ask for the packet missing
+                        radio_tx.write("")
+                        print('Some packet missing.')
+                        break
+                    else:
+                        num_packets =+ 1
+
+            if len(frames) == num_packets:
                 # Send the final one back.
                 radio_tx.write("ACK")
                 print('Sent response.')
 
             # Now, resume listening so we catch the next packets.
             radio_rx.startListening()
-
