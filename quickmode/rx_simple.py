@@ -44,7 +44,11 @@ print('Quick Mode script! ')
 
 print('RX Role:Pong Back, awaiting transmission')
 
-radio_tx, radio_rx = configure_radios()
+channel_RX = 0x60
+channel_TX = 0x65
+payload_size = config.payload_size
+
+radio_tx, radio_rx = configure_radios(channel_TX, channel_RX)
 
 radio_rx.startListening()
 
@@ -58,9 +62,9 @@ while 1:
     # Pong back role.  Receive each packet, dump it out, and send ACK
     if radio_rx.available():
         while radio_rx.available():
-            len = radio_rx.getDynamicPayloadSize()
-            receive_payload = radio_rx.read(len)
-            print('Got payload size={} value="{}"'.format(len, receive_payload.decode('utf-8')))
+            #len = radio_rx.getDynamicPayloadSize()
+            receive_payload = radio_rx.read(payload_size)
+            print('Got payload size={} value="{}"'.format(payload_size, receive_payload.decode('utf-8')))
 
             # Insert the frame with its respective id
             frame_id = int(receive_payload[:7], 2)
@@ -79,7 +83,7 @@ while 1:
             # sorted(frames)
 
             # First, stop listening so we can talk
-            radio_rx.stopListening()
+            #radio_rx.stopListening()
 
             # Check if it is last packet
             if receive_payload[8] is 1:
@@ -87,6 +91,7 @@ while 1:
 
             # If it is the last packet it sends the ack
             if not last_packet:
+                # TODO: stop and wait
                 pass
             else:
                 # Check all packets are sent correctly
@@ -98,7 +103,7 @@ while 1:
                         print('Some packet missing.')
                         break
                     else:
-                        num_packets =+ 1
+                        num_packets += 1
 
             if len(frames) == num_packets:
                 # Send the final one back.
@@ -106,4 +111,4 @@ while 1:
                 print('Sent response.')
 
             # Now, resume listening so we catch the next packets.
-            radio_rx.startListening()
+            #radio_rx.startListening()

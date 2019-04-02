@@ -6,7 +6,7 @@ class PacketManager(object):
         super(PacketManager, self).__init__()
         self.document = document
         self.payload_size = 32
-        self.data_size = self.payload_size
+        self.data_size = 30
         self.use_compression = False
 
     def create(self):
@@ -21,7 +21,7 @@ class PacketManager(object):
             compressed_fragments = fragments
         
         for frame_id, cf in enumerate(compressed_fragments):
-            packet = self._create_packet(cf, frame_id, self._generate_crc(cf))
+            packet = self._create_packet(cf, frame_id)
             packets.append(packet)
 
         return packets
@@ -51,7 +51,7 @@ class PacketManager(object):
         compressed_fragments = [zlib.compress(fragment) for fragment in fragments]
         return compressed_fragments
 
-    def _create_packet(self, compressed_fragment, frame_id, crc_fragments, type_of_frame = "data"):
+    def _create_packet(self, compressed_fragment, frame_id, crc_fragments = "", type_of_frame = "data"):
         """
         Header (not type of frame for now --> Network mode si)
         *-------------------------------------------------*
@@ -89,7 +89,8 @@ class PacketManager(object):
 
         packet.extend(header)
         packet.append(compressed_fragment)
-        packet.append(crc_fragments)
+        if crc_fragments != "":
+            packet.append(crc_fragments)
 
         return packet
 

@@ -45,8 +45,11 @@ print('Quick Mode script! ')
 
 print('TX Role: Ping Out, starting transmission')
 
-radio_tx, radio_rx = configure_radios()
+channel_TX = 0x60
+channel_RX = 0x65
+payload_size = config.payload_size
 
+radio_tx, radio_rx = configure_radios(channel_TX, channel_RX)
 
 packet_manager = PacketManager(config.document_path)
 packets = packet_manager.create()
@@ -61,7 +64,7 @@ for packet in packets:
     radio_tx.write(packet)
 
     # Now, continue listening
-    radio_tx.startListening()
+    radio_rx.startListening()
 
     # Wait here until we get a response, or timeout
     started_waiting_at = millis()
@@ -71,7 +74,7 @@ for packet in packets:
     ack_received = False
 
     while not ack_received:
-        while (not radio_tx.available()) and (not timeout):
+        while (not radio_rx.available()) and (not timeout):
             if (millis() - started_waiting_at) > config.timeout_time:
                 timeout = True
 
@@ -81,8 +84,9 @@ for packet in packets:
             retransmit = True
         else:
             # Grab the response, compare, and send to debugging spew
-            len = radio_tx.getDynamicPayloadSize()
-            ack = radio_tx.read(len)
+            #len = radio_tx.getDynamicPayloadSize()
+            #ack = radio_rx.read(len)
+            ack = radio_rx.read(payload_size)
 
             # Spew it
             print('got response: {}'.format(len, ack.decode('utf-8')))
