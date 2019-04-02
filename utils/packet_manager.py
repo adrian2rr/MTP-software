@@ -23,7 +23,6 @@ class PacketManager(object):
         for frame_id, cf in enumerate(compressed_fragments):
             packet = self._create_packet(cf, frame_id, self._generate_crc(cf))
             packets.append(packet)
-            
 
         return packets
 
@@ -54,7 +53,7 @@ class PacketManager(object):
 
     def _create_packet(self, compressed_fragment, frame_id, crc_fragments, type_of_frame = "data"):
         """
-        Header
+        Header (not type of frame for now --> Network mode si)
         *-------------------------------------------------*
         | Type_of_frame | Frame_ID | EOT | Payload_length |
         *-------------------------------------------------*

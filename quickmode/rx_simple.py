@@ -48,6 +48,10 @@ radio_tx, radio_rx = configure_radios()
 
 radio_rx.startListening()
 
+frames = []
+
+last_packet = False
+num_packets = 0
 
 # forever loop
 while 1:
@@ -57,12 +61,30 @@ while 1:
             len = radio_rx.getDynamicPayloadSize()
             receive_payload = radio_rx.read(len)
             print('Got payload size={} value="{}"'.format(len, receive_payload.decode('utf-8')))
+
+            # Insert the frame with its respective id
+            frame_id = int(receive_payload[:7], 2)
+
+            frames = frames + [(frame_id, receive_payload)]
+
+            sorted(frames)
+
+            # num_packets += 1
+
             # First, stop listening so we can talk
             radio_rx.stopListening()
 
-            # Send the final one back.
-            radio_tx.write("ACK")
-            print('Sent response.')
+            # Check if it is last packet
+            if receive_payload[8] is 1:
+                last_packet = True
+
+            # If it is the last packet it sends the ack
+            if not last_packet:
+                pass
+            else:
+                # Send the final one back.
+                radio_tx.write("ACK")
+                print('Sent response.')
 
             # Now, resume listening so we catch the next packets.
             radio_rx.startListening()
