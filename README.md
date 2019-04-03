@@ -7,7 +7,7 @@ To simplify the development of the highest level software we have created this l
 
 This library consists of two parts, one dedicated to the control of the SPI protocol between the micro and the module. And another responsible for simplifying the commands described in the datasheet of the module nRF24L01.
 
-### SPI connector
+#### SPI connector
 
 In this part of the library have been defined two functions that will be used by the rest of the library. And in this way to get our software independent of any external library that is used.
 
@@ -21,7 +21,7 @@ The second function will be the function responsible for performing an SPI opera
 
 
 
-### nRF24L01 commands
+#### nRF24L01 commands
 
 Coming soon!!
 
