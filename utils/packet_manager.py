@@ -95,3 +95,14 @@ class PacketManager(object):
         return packet
 
 
+class PacketManagerAck():
+
+    def __init__(self):
+        pass
+
+    def create(self, id_frame):
+        """TODO: improve ACK creation"""
+        ack = []
+
+        ack.append(id_frame)
+        return ack

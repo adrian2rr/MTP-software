@@ -5,6 +5,8 @@ from RF24 import *
 from utils.radio import configure_radios
 from utils.config import get_args, process_config
 
+from utils.packet_manager import PacketManagerAck
+
 irq_gpio_pin = None
 
 ########### USER CONFIGURATION ###########
@@ -57,6 +59,9 @@ frames = {}
 last_packet = False
 num_packets = 0
 
+packet_manager_ack = PacketManagerAck()
+packet_ack = []
+
 # forever loop
 while 1:
     # Pong back role.  Receive each packet, dump it out, and send ACK
@@ -98,8 +103,11 @@ while 1:
                 for id_frame, value in frames:
                     if frames[id_frame] is None:
                         # if it finds some value None it asks for this packet
-                        # TODO: ask for the packet missing
-                        radio_tx.write("")
+                        # TODO: review ack implementation
+
+                        packet_ack = packet_manager_ack.create(bin(frame_id))
+
+                        radio_tx.write(packet_ack)
                         print('Some packet missing.')
                         break
                     else:
