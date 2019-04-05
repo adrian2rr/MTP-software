@@ -20,7 +20,7 @@ class Compression(object):
 		self.N = int(self.padded_doc_size/self.payload_size)
 		# if read file is not a multiple of 32 cut it
 		if(self.padded_doc_size%self.N != 0):
-		    self.padded_doc = self.padded_doc[:self.N]
+		    self.padded_doc = self.padded_doc[:self.N*self.payload_size]
 		    self.new_file_size = len(self.padded_doc)
 		else:
 		    self.new_file_size = self.total_file_size
