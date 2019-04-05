@@ -3,14 +3,17 @@ import zlib
 
 class Compression(object):
 
+	def __init__(self):
+		self.compressed_list = []
+		self.decompressed_list = []
+
 	def create_fragments(self, document_string, payload_size, blocks):
 		self.doc = document_string
 		self.payload_size = payload_size
 		self.blocks = blocks
 		self.total_file_size = len(self.doc)
 		self.N = int(self.total_file_size/self.payload_size)
-		self.compressed_list = []
-		self.decompressed_list = []
+
 		# if read file is not a multiple of 32 cut it
 		# TODO add padding
 		if(self.total_file_size%self.N != 0):
