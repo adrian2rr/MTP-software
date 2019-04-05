@@ -92,6 +92,6 @@ class PacketManager(object):
         if crc_fragments != "":
             packet.append(crc_fragments)
 
-        return packet
+        return ''.join(packet)
 
 
