@@ -53,7 +53,7 @@ radio_tx, radio_rx = configure_radios(channel_TX, channel_RX)
 
 packet_manager = PacketManager(config.document_path)
 packets = packet_manager.create()
-
+print(packets[0])
 # loop over the packets to be sent
 for packet in packets:
     # First, stop listening so we can talk.
@@ -75,7 +75,7 @@ for packet in packets:
 
     while not ack_received:
         while (not radio_rx.available()) and (not timeout):
-            if (millis() - started_waiting_at) > config.timeout_time:
+            if (millis() - started_waiting_at) > int(config.timeout_time):
                 timeout = True
 
         # Describe the results
@@ -103,5 +103,3 @@ for packet in packets:
             print("Timeout or NACK received --> resending message")
             print("Retransmission number {}".format(num_retransmissions))
             radio_tx.write(packet)
-
-
