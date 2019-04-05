@@ -12,27 +12,38 @@ class Compression(object):
 		self.payload_size = payload_size
 		self.blocks = blocks
 		self.total_file_size = len(self.doc)
-		self.N = int(self.total_file_size/self.payload_size)
 
+		# this is 1 + 31 zeros that will be added and cut
+		self.padding = b'100000000000000000000000000000000'
+		self.padded_doc = self.doc + self.padding
+		self.padded_doc_size = len(self.padded_doc)
+		self.N = int(self.padded_doc_size/self.payload_size)
 		# if read file is not a multiple of 32 cut it
-		# TODO add padding
-		if(self.total_file_size%self.N != 0):
-		    self.doc = self.doc[:self.N]
-		    self.new_file_size = self.N*self.payload_size
+		if(self.padded_doc_size%self.N != 0):
+		    self.padded_doc = self.padded_doc[:self.N]
+		    self.new_file_size = len(self.padded_doc)
 		else:
 		    self.new_file_size = self.total_file_size
 
-		self.block_size = int((self.N*self.payload_size)/self.blocks)
-		self.fragments = [self.doc[i:i+self.block_size] for i in range(0, self.new_file_size, self.block_size)]
+		self.block_size = int((self.padded_doc_size)/self.blocks)
+		self.fragments = [self.padded_doc[i:i+self.block_size] for i in range(0, self.new_file_size, self.block_size)]
 
 
 	def encode(self, compression_level):
 		for string in self.fragments:
 			self.compressed_list.append(zlib.compress(string, compression_level))
 		return self.compressed_list
-	
+
 	def decode(self,  compressed_list):
-            for string in compressed_list:
-                self.decompressed_list.append(zlib.decompress(string))
-            return self.decompressed_list
+		for string in compressed_list:
+			self.decompressed_list.append(zlib.decompress(string))
+		return self.decompressed_list
+
+	def print_fragments(self):
+		i = 0
+		for f in self.fragments:
+			print(i)
+			print(f)
+			print("\n")
+			i += 1
 
