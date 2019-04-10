@@ -6,6 +6,7 @@ from RF24 import *
 from utils.radio import configure_radios
 from utils.config import get_args, process_config
 from utils.packet_manager_simple import PacketManagerAck
+from utils.ledManager import ledManager
 
 try:
     args = get_args()
@@ -20,6 +21,10 @@ millis = lambda: int(round(time.time() * 1000))
 print('Quick Mode script! ')
 
 print('RX Role:Pong Back, awaiting transmission')
+
+# Set led Manager
+led = ledManager()
+led.red()
 
 # Set comunication parameters
 channel_RX = 60
@@ -40,15 +45,18 @@ num_file = 0
 packet_manager_ack = PacketManagerAck()
 packet_ack = packet_manager_ack.create()
 
+led.blue()
+loop = 1
 # forever loop
-while 1:  
+while loop: 
+ 
     # Pong back role.  Receive each packet, dump it out, and send ACK
     if radio_rx.available():
         while radio_rx.available():
             #First check of the payload
             len = radio_rx.getDynamicPayloadSize()
             receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
-            print('Got payload eot={} value="{}"'.format(receive_payload[0], receive_payload[1:31].decode('utf-8')))
+            #print('Got payload eot={} value="{}"'.format(receive_payload[0], receive_payload[1:31].decode('utf-8')))
             
             # Append the information 
             frames += receive_payload[1:]
@@ -64,6 +72,7 @@ while 1:
             
             # If it is the last packet save the txt
             if last_packet:
+                led.green()
                 print('Reception complete.')
                 f = open('file'+str(num_file)+'.txt','wb')
                 f.write(bytes(frames))
@@ -73,4 +82,7 @@ while 1:
                 last_packet = False
                 num_packets = 0
                 num_file += 1
+                input('Press Enter to finish')
+                led.off()
+                loop = 0
     
