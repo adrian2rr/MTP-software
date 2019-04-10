@@ -45,24 +45,32 @@ print('Quick Mode script! ')
 
 print('TX Role: Ping Out, starting transmission')
 
-radio_tx, radio_rx = configure_radios()
+channel_TX = 60
+channel_RX = 75
+payload_size = config.payload_size
 
+radio_tx, radio_rx = configure_radios(channel_TX, channel_RX,1)
 
 packet_manager = PacketManager(config.document_path)
 packets = packet_manager.create()
+print(packets[0])
+
+radio_rx.startListening()
+radio_tx.stopListening()
 
 # loop over the packets to be sent
+i=0
 for packet in packets:
-    # First, stop listening so we can talk.
-    radio_tx.stopListening()
-
     # Take the time, and send it.  This will block until complete
-    print('Now sending message: {} ... '.format(packet), end="")
+    # print('Now sending message: {} ... '.format(packet), end="")
     radio_tx.write(packet)
-
+    i+=1
+    if(i>=100):
+        break
     # Now, continue listening
-    radio_tx.startListening()
 
+    radio_rx.startListening()
+    
     # Wait here until we get a response, or timeout
     started_waiting_at = millis()
     timeout = False
@@ -71,33 +79,30 @@ for packet in packets:
     ack_received = False
 
     while not ack_received:
-        while (not radio_tx.available()) and (not timeout):
-            if (millis() - started_waiting_at) > config.timeout_time:
+        while (not radio_rx.available()) and (not timeout):
+            if (millis() - started_waiting_at) > int(config.timeout_time):
                 timeout = True
-
-        # Describe the results
+        # In case of time out: Resend
         if timeout:
             print('failed, response timed out.')
-            retransmit = True
-        else:
-            # Grab the response, compare, and send to debugging spew
-            len = radio_tx.getDynamicPayloadSize()
-            ack = radio_tx.read(len)
-
-            # Spew it
-            print('got response: {}'.format(len, ack.decode('utf-8')))
-            if ack.decode('utf-8') == "ACK":
-                print("ACK Received --> transmit the next packet")
-                retransmit = False
-                ack_received = True
-            else:
-                print("NACK - Message Lost --> retransmission required")
-                retransmit = True
-
-        if retransmit:
             num_retransmissions += 1
-            print("Timeout or NACK received --> resending message")
+            print("Timeout --> resending message")
             print("Retransmission number {}".format(num_retransmissions))
             radio_tx.write(packet)
+            timeout = False			
+        else:
+            # Grab the response
+            ack = radio_rx.read(3)
+            print('got response:')
+            #  Analyze ACK
+            if ack[0] == 0:
+                print("ACK Received --> transmit the next packet")
+                ack_received = True
+                num_retransmissions = 0
+            else:
+                print("NACK - Message Lost --> retransmission required")
+                frame_id = int.from_bytes(ack[1:2],byteorder='big')
+                radio_tx.write(ack[frame_id])        
+
 
 

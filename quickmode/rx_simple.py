@@ -4,8 +4,7 @@ from RF24 import *
 
 from utils.radio import configure_radios
 from utils.config import get_args, process_config
-
-irq_gpio_pin = None
+from utils.packet_manager import PacketManagerAck
 
 ########### USER CONFIGURATION ###########
 # See https://github.com/TMRh20/RF24/blob/master/pyRF24/readme.md
@@ -44,26 +43,68 @@ print('Quick Mode script! ')
 
 print('RX Role:Pong Back, awaiting transmission')
 
-radio_tx, radio_rx = configure_radios()
+channel_RX = 60
+channel_TX = 75
+payload_size = config.payload_size
+
+radio_tx, radio_rx = configure_radios(channel_TX, channel_RX,0)
 
 radio_rx.startListening()
-
-
+radio_tx.stopListening()
+#radio_rx.printDetails()
+frames = {}
+last_packet = False
+num_packets = 0
+ACK = 0
+NACK = 1
+packet_manager_ack = PacketManagerAck()
 # forever loop
-while 1:
+while 1:  
     # Pong back role.  Receive each packet, dump it out, and send ACK
     if radio_rx.available():
         while radio_rx.available():
+            #First check of the payload
             len = radio_rx.getDynamicPayloadSize()
-            receive_payload = radio_rx.read(len)
-            print('Got payload size={} value="{}"'.format(len, receive_payload.decode('utf-8')))
-            # First, stop listening so we can talk
-            radio_rx.stopListening()
+            receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
+            print('Got payload size={} value="{}"'.format(payload_size, receive_payload.decode('utf-8')))
 
-            # Send the final one back.
-            radio_tx.write("ACK")
-            print('Sent response.')
+            # Check if the id is correct
+            frame_id = int.from_bytes(receive_payload[1:2],byteorder='big')
+            print(frame_id)
+            if last_packet:
+                frames.update({str(frame_id): receive_payload[4:]})
+            # If it is correct, update the collection            
+            elif frame_id == 0 or len(frames) == frame_id:
+                frames.update({str(frame_id): receive_payload[4:]})
+            # If it is not correct, update the collection with empty
+            else:
+                while (len(frames)+1) != frame_id:
+                    if len(frames) == frame_id:
+                        frames.update({str(frame_id): receive_payload[4:]})
+                    else:
+                        frames.update({str(len(frames)+1): None})
 
-            # Now, resume listening so we catch the next packets.
-            radio_rx.startListening()
+            # Check if it is last packet
+            if receive_payload[3] is 1:
+                last_packet = True
 
+            # If it is not the last packet it sends an ack
+            if not last_packet:
+                packet_ack = packet_manager_ack.create(ACK)
+                radio_tx.write(packet_ack)
+                print('Sent response.')
+                pass
+            else:
+                # Check all packets are sent correctly
+                for id_frame, value in frames:
+                    if frames[id_frame] is None:
+                        packet_ack = packet_manager_ack.create(NACK,id_frame)
+                        radio_tx.write(packet_ack)
+                        print('Some packet missing.')
+                        break
+                    else:
+                        num_packets += 1
+
+            if last_packet and len(frames) == num_packets:
+                print('Reception complete.')
+                
