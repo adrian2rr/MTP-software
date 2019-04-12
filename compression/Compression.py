@@ -47,3 +47,6 @@ class Compression(object):
 			print("\n")
 			i += 1
 
+	def flush():
+		self.decompressed_list = []
+		self.compressed_list = []
