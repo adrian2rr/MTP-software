@@ -2,7 +2,6 @@ from __future__ import print_function
 import time
 from RF24 import *
 
-
 from utils.radio import configure_radios
 from utils.config import get_args, process_config
 from utils.packet_manager_simple import PacketManagerAck
@@ -48,8 +47,8 @@ packet_ack = packet_manager_ack.create()
 led.blue()
 loop = 1
 # forever loop
-while loop: 
- 
+while loop:
+
     # Pong back role.  Receive each packet, dump it out, and send ACK
     if radio_rx.available():
         while radio_rx.available():
@@ -57,19 +56,19 @@ while loop:
             len = radio_rx.getDynamicPayloadSize()
             receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
             #print('Got payload eot={} value="{}"'.format(receive_payload[0], receive_payload[1:31].decode('utf-8')))
-            
-            # Append the information 
+
+            # Append the information
             frames += receive_payload[1:]
-            
+
             # Check if it is last packet
             if receive_payload[0] == 1:
                 print('Last packet')
-                last_packet = True    
-            
+                last_packet = True
+
             # Send Ack
             radio_tx.write(bytes([0]))
             print('Sent response.')
-            
+
             # If it is the last packet save the txt
             if last_packet:
                 led.green()
@@ -85,4 +84,3 @@ while loop:
                 input('Press Enter to finish')
                 led.off()
                 loop = 0
-    

@@ -5,6 +5,7 @@ from RF24 import *
 from utils.packet_manager_simple import PacketManager
 from utils.radio import configure_radios
 from utils.config import get_args, process_config
+from utils.ledManager import ledManager
 
 try:
     args = get_args()
@@ -20,6 +21,9 @@ print('Quick Mode script! ')
 
 print('TX Role: Ping Out, starting transmission')
 
+# Set led Manager
+led = ledManager()
+led.red()
 
 # Define comunication parameters
 channel_TX = 60
@@ -38,14 +42,15 @@ packets = packet_manager.create()
 #Define loop variables
 
 # loop over the packets to be sent
+led.violet()
 i=0
 for packet in packets:
     #Send the packet
     radio_tx.write(packet)
     print('Sending packet {}'.format(i))
-    i+=1  
+    i+=1
 
-    # Reset variables 
+    # Reset variables
 
     timeout = False
     retransmit = False
@@ -60,20 +65,21 @@ for packet in packets:
                 timeout = True
         # In case of time out: Resend
         if timeout:
+            led.yellow()
             print('failed, response timed out.')
             num_retransmissions += 1
             print("Timeout --> resending message")
             print("Retransmission number {}".format(num_retransmissions))
             radio_tx.write(packet)
-            timeout = False			
+            timeout = False
         else:
+            led.violet()
             # Grab the response
             ack = radio_rx.read(1)
             print('got response:{}'.format(ack))
             #  Analyze ACK
             if ack == bytes([0]):
                 print("ACK Received --> transmit the next packet")
-                ack_received = True       
+                ack_received = True
 
-
-
+led.off()
