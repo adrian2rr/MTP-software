@@ -7,7 +7,7 @@ class PacketManager(object):
         super(PacketManager, self).__init__()
         self.document = document
         self.payload_size = 32
-        self.data_size = 31
+        self.data_size = 30
         self.use_compression = False
 
     def create(self):
@@ -83,10 +83,12 @@ class PacketManager(object):
             eot = 1
         else:
             eot = 0
+        identifier=frame_id%2
+
 
         # Create header
-        header = bytes([eot])
-
+        header = bytes([identifier])
+        header +=bytes([eot])
         
         # Append header to data
         packet = header
