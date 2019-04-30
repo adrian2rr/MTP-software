@@ -83,12 +83,12 @@ class PacketManager(object):
             eot = 1
         else:
             eot = 0
-        identifier = frame_id%2
-        
+
+        identifier=frame_id%2
+
         # Create header
         header = bytes([identifier])
-        header += bytes([eot])
-
+        header +=bytes([eot])
         
         # Append header to data
         packet = header

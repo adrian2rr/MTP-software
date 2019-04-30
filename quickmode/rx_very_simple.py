@@ -47,6 +47,7 @@ packet_ack = packet_manager_ack.create()
 led.blue()
 loop = 1
 packet_number = 0
+
 # forever loop
 while loop:
 
@@ -57,7 +58,7 @@ while loop:
             len = radio_rx.getDynamicPayloadSize()
             receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
             #print('Got payload eot={} value="{}"'.format(receive_payload[0], receive_payload[1:31].decode('utf-8')))
-
+            
             # Save it if is not a duplicate packet
             print('received_payload'+str(receive_payload[0]))
             if receive_payload[0] == packet_number:
