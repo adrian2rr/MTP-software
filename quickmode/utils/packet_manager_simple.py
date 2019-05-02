@@ -29,7 +29,7 @@ class PacketManager(object):
 
         return packets
 
-    def _compress(self, data_to_compress, level = 6):
+    def _compress(self, data_to_compress, level = 9):
         """
         Params: data_to_compress
                 level
