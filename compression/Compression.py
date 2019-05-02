@@ -13,8 +13,12 @@ class Compression(object):
 		self.blocks = blocks
 		self.total_file_size = len(self.doc)
 
-		# this is 1 + 31 zeros that will be added and cut
-		self.padding = b'100000000000000000000000000000000'
+		# create padding
+		self.padding = b'1'
+		for i in range(0,blocks-1):
+			self.padding = self.padding + b'0'
+
+
 		self.padded_doc = self.doc + self.padding
 		self.padded_doc_size = len(self.padded_doc)
 		self.N = int(self.padded_doc_size/self.payload_size)
