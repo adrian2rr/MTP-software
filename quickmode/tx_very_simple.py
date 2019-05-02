@@ -44,10 +44,11 @@ packets = packet_manager.create()
 # loop over the packets to be sent
 led.violet()
 i=0
+tot_packets = len(packets)
 for packet in packets:
     #Send the packet
     radio_tx.write(packet)
-    print('Sending packet {}'.format(i))
+    print('Sending packet ' + str(i) + '/' + str(tot_packets))
     i+=1
 
     # Reset variables
