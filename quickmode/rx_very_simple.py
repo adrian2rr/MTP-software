@@ -1,7 +1,7 @@
 from __future__ import print_function
 import time
 from RF24 import *
-
+import zlib
 from utils.radio import configure_radios
 from utils.config import get_args, process_config
 from utils.packet_manager_simple import PacketManagerAck
@@ -83,10 +83,14 @@ while loop:
 
             # If it is the last packet save the txt
             if last_packet:
-                led.green()
+                #led.green()
                 print('Reception complete.')
                 # If we are here it means we received all the frames so we have to uncompress
-                uncompressed_frames = zlib.decompress(frames)
+                print("Type of the list")
+                print(type(frames))
+                print("Type of one element")
+                print(type(frames[0]))
+                uncompressed_frames = zlib.decompress(bytes(frames))
                 f = open('file'+str(num_file)+'.txt','wb')
                 f.write(bytes(uncompressed_frames))
                 f.close()
