@@ -9,7 +9,7 @@ class PacketManager(object):
         self.payload_size = 32
         self.data_size = 30
         self.use_compression = False
-
+        self.window_size = 32
     def create(self):
         packets = []
         with open(self.document, 'rb') as doc:
@@ -28,6 +28,25 @@ class PacketManager(object):
             packets.append(packet)
 
         return packets
+
+    def create_window(self):
+        packets = []
+        with open(self.document, 'rb') as doc:
+            # data_to_tx are the Bytes to be tx
+            data_to_tx = doc.read()
+
+        data_to_tx_compressed = self._compress(data_to_tx)
+       
+        fragments = self._fragment_file(data_to_tx_compressed)
+
+        packet_number = len(fragments)
+        for fragment_id, cf in enumerate(fragments):
+            packet = self._create_packet_window(cf, fragment_id)
+            packets.append(packet)
+        return packets
+
+
+          
 
     def _compress(self, data_to_compress, level = 9):
         """
@@ -102,6 +121,13 @@ class PacketManager(object):
         packet = header
         packet += compressed_fragment
 
+        return packet
+
+    def _create_packet_window(self, compressed_fragment, fragment_id):
+        packet = []
+        header = bytes(fragment_id % self.window_size)
+        packet = header
+        packet += compressed_fragment
         return packet
 
 class PacketManagerAck(object):

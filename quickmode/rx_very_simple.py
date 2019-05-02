@@ -50,8 +50,8 @@ packet_manager_ack = PacketManagerAck()
 packet_ack = packet_manager_ack.create()
 
 led.blue()
-loop = 1
-packet_number = 0
+
+WINDOW_SIZE = 32
 
 # forever loop
 while loop:
