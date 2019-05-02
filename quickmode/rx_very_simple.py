@@ -7,6 +7,11 @@ from utils.config import get_args, process_config
 from utils.packet_manager_simple import PacketManagerAck
 from utils.ledManager import ledManager
 
+"""
+TODO: Create packet manager that reassembles the packets instead of reassembling the packets in the last if
+"""
+
+
 try:
     args = get_args()
     config = process_config(args.config)
@@ -80,8 +85,10 @@ while loop:
             if last_packet:
                 led.green()
                 print('Reception complete.')
+                # If we are here it means we received all the frames so we have to uncompress
+                uncompressed_frames = zlib.decompress(frames)
                 f = open('file'+str(num_file)+'.txt','wb')
-                f.write(bytes(frames))
+                f.write(bytes(uncompressed_frames))
                 f.close()
                 print('File saved')
                 frames = []

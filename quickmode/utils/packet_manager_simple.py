@@ -13,21 +13,29 @@ class PacketManager(object):
     def create(self):
         packets = []
         with open(self.document, 'rb') as doc:
+            # data_to_tx are the Bytes to be tx
             data_to_tx = doc.read()
 
-        fragments = self._fragment_file(data_to_tx)
-        if self.use_compression:
-            compressed_fragments = self._compress_fragments(fragments)
-        else:
-            compressed_fragments = fragments
+
+        data_to_tx_compressed = self._compress(data_to_tx)
+       
+        fragments = self._fragment_file(data_to_tx_compressed)
 
         packet_number = len(fragments)
 		
-        for frame_id, cf in enumerate(compressed_fragments):
+        for frame_id, cf in enumerate(fragments):
             packet = self._create_packet(cf, frame_id, packet_number)
             packets.append(packet)
 
         return packets
+
+    def _compress(self, data_to_compress, level = 6):
+        """
+        Params: data_to_compress
+                level
+        Return: A list with bytes to be tx
+        """ 
+        return zlib.compress(data_to_compress, level)
 
     def _generate_crc(self, line):
 
