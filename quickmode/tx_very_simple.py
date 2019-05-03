@@ -79,19 +79,19 @@ if(not efficient):
                 # There is sth in the receiver
                 print("I listen to ACK")
                 ack = radio_rx.read(radio_rx.getDynamicPayloadSize())
-                if(len(ack) == WINDOW_SIZE):
-                    # All packets are OK
-                    print("ALL PACKETS OK!!!!!!")
-                else:
-                    # Some packets are wrong, they will send the ones that are good
-                    print("Some packets are wrong")
-                    for ack_idx in ack:
-                        if(rx_acks_bools[ack_idx] == 0):
-                            rx_acks += 1
-                            rx_acks_bools[ack_idx] = 1
-                    print("ACKS array")
-                    print(rx_acks_bools)
-                    print("Number of acks " +str(rx_acks))
+                # if(len(ack) == WINDOW_SIZE):
+                #     # All packets are OK
+                #     print("ALL PACKETS OK!!!!!!")
+                # else:
+                # Some packets are wrong, they will send the ones that are good
+                print("Some packets are wrong")
+                for ack_idx in ack:
+                    if(rx_acks_bools[ack_idx] == 0):
+                        rx_acks += 1
+                        rx_acks_bools[ack_idx] = 1
+                print("ACKS array")
+                print(rx_acks_bools)
+                print("Number of acks " +str(rx_acks))
 
         
 else: 
