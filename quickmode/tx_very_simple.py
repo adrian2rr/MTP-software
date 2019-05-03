@@ -68,7 +68,7 @@ if(not efficient):
             for packet_index in range(len(rx_acks_bools)):
                 if(rx_acks_bools[packet_index] == 0):
                     radio_tx.write(packets[window_counter * WINDOW_SIZE + packet_index])
-                    print("tx packet " + str(packet_index))
+                    print("tx packet " + str(window_counter*WINDOW_SIZE+packet_index))
             # Once it has sent all the packets in the window it checks the ACK and checks the timeout
             started_waiting_at = millis()
             while (not radio_rx.available()) and (not timeout):
