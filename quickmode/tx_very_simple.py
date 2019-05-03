@@ -86,12 +86,13 @@ for window_counter in range(tot_packets//WINDOW_SIZE):
             
             for ack_idx in ack:
                 if(rx_acks_bools[ack_idx] == 0):
-                    print("Some packets are wrong")
+                    print("Packet " + str(ack_idx) + " correct")
                     rx_acks += 1
                     rx_acks_bools[ack_idx] = 1
             print("ACKS array")
             print(rx_acks_bools)
-            print("Number of acks " + str(rx_acks))
+            wrong_packets = WINDOW_SIZE - rx_acks
+            print("Wrong packets " + str(wrong_packets))
 
         
 
