@@ -84,9 +84,10 @@ if(not efficient):
                 #     print("ALL PACKETS OK!!!!!!")
                 # else:
                 # Some packets are wrong, they will send the ones that are good
-                print("Some packets are wrong")
+                
                 for ack_idx in ack:
                     if(rx_acks_bools[ack_idx] == 0):
+                        print("Some packets are wrong")
                         rx_acks += 1
                         rx_acks_bools[ack_idx] = 1
                 print("ACKS array")
