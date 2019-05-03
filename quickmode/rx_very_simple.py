@@ -53,6 +53,28 @@ led.blue()
 
 WINDOW_SIZE = 32
 
+loop = True
+while loop:
+
+    # Set window variables
+    rx_id  = []
+    
+    while(radio_rx.available()):
+        #First check of the payload
+        len = radio_rx.getDynamicPayloadSize()
+        receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
+
+
+
+
+
+
+
+
+
+
+
+loop = True
 # forever loop
 while loop:
 

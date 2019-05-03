@@ -18,7 +18,7 @@ class PacketManager(object):
 
 
         data_to_tx_compressed = self._compress(data_to_tx)
-       
+        
         fragments = self._fragment_file(data_to_tx_compressed)
 
         packet_number = len(fragments)
@@ -35,14 +35,25 @@ class PacketManager(object):
             # data_to_tx are the Bytes to be tx
             data_to_tx = doc.read()
 
+        # COMPRESS
         data_to_tx_compressed = self._compress(data_to_tx)
-       
+        # FRAGMENT
         fragments = self._fragment_file(data_to_tx_compressed)
 
         packet_number = len(fragments)
+        
         for fragment_id, cf in enumerate(fragments):
-            packet = self._create_packet_window(cf, fragment_id)
+            packet = self._create_packet_window(cf, fragment_id, packet_number)
             packets.append(packet)
+        
+        # There could be cases in which the ratio packet_number/win_size is not an integer
+        padding_in_last_window = packet_number % self.window_size
+        # these packets below will not be decoded by the receiver
+        for i in range(padding_in_last_window):
+            pad_packet = [0] * self.payload_size
+            pad_packet = bytes(pad_packet)
+            packets.append(pad_packet)
+
         return packets
 
 
@@ -123,10 +134,24 @@ class PacketManager(object):
 
         return packet
 
-    def _create_packet_window(self, compressed_fragment, fragment_id):
+    def _create_packet_window(self, compressed_fragment, fragment_id, packet_number):
+        """
+        Packet structure for window case:
+        *-------------------------------------------------------------*
+        | X X X X X X X X |                  DATA                     |
+        *-------------------------------------------------------------*
+        | EOT (1b) - WIN_ID(7b) |            DATA                     |
+        *-------------------------------------------------------------*
+        Maximum window size = 127
+        """
         packet = []
-        header = bytes(fragment_id % self.window_size)
-        packet = header
+        id_in_window = fragment_id % self.window_size
+        eot = 0x00
+        if(fragment_id == packet_number - 1):
+            eot = 0x80
+        # We do the OR so the eot is just the first bit instead of the whole byte
+        header = eot | id_in_window
+        packet = bytes([header])
         packet += compressed_fragment
         return packet
 
