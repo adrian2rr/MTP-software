@@ -47,7 +47,6 @@ i=0
 tot_packets = len(packets)
 window_counter = 0
 WINDOW_SIZE = 32 # TODO: Put in config file
-ACK_SIZE = 32
 
 efficient = False
 # TODO: to avoid this code mess (below), make classes transmitter and receiver, these ones will have methods like: stop_and_wait(already implemented), sliding_window (this one)
@@ -56,7 +55,8 @@ if(not efficient):
         # rx_acks => remaining packets to send
         t = time.time()
         rx_acks = [ i for i in range(WINDOW_SIZE)] # esto de crear la lista asi y aqui no me gusta, habra que cambiarlo, por un contador? --> efficient version
-        elapsed = time.time() -t
+        rx_acks_bools = [0] * WINDOW_SIZE
+        elapsed = time.time() - t
         print("Elapsed time = " + str(elapsed))
         timeout = False
         # Start timeout
@@ -64,8 +64,9 @@ if(not efficient):
         # si ha saltado el timeout o el numbero de acks recibidos es menor que la window size tendra que enviar 
         while( (len(rx_acks) > 0) or (not timeout) ): 
             for packet_index in rx_acks:
-                radio_tx.write(packets[window_counter * WINDOW_SIZE + packet_index])
-                print("tx packet " + str(packet_index))
+                if(rx_acks_bools[packet_index] == 0):
+                    radio_tx.write(packets[window_counter * WINDOW_SIZE + packet_index])
+                    print("tx packet " + str(packet_index))
             # Once it has sent all the packets in the window it cheks the ACK and checks the timeout
             while (not radio_rx.available()) and (not timeout):
                 print("Checking time")
@@ -76,14 +77,15 @@ if(not efficient):
                 timeout = False
             else:
                 # There is sth in the receiver
-                ack = radio_rx.read(ACK_SIZE)
-              
-                if(ack[0] == 255):
-                    # All packets are OK, go to the next window
+                ack = radio_rx.read(radio_rx.getDynamicPayloadSize())
+                if(len(ack) == WINDOW_SIZE):
+                    # All packets are OK
                     rx_acks = []
                 else:
+                    # Some packets are wrong, they will send the ones that are good
                     for ack_idx in ack:
                         del rx_acks[ack_idx]
+                        rx_acks_bools[ack_idx] = 1
         window_counter += 1
 else: 
     for window_counter in range(tot_packets//WINDOW_SIZE):
