@@ -84,10 +84,11 @@ while loop:
                 # hex 7f is 127 i.e. 1111111
                 frame_id = 0x7f & header
                 window_id = frame_id % WINDOW_SIZE
-                rx_id.append(window_id)
+                if(window_id not in rx_id):
+                    rx_id.append(window_id)
                 window_bytes[window_id:window_id + data_size] = receive_payload[1:]
 
-            if(len(rx_id) == WINDOW_SIZE or len(rx_id) == last_window + 1):
+            if(len(rx_id) == WINDOW_SIZE or len(rx_id) == int(last_window) + 1):
                 end_of_window = True
 
         # send correct ids (rx_id)
