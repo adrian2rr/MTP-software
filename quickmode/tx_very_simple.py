@@ -85,13 +85,13 @@ if(not efficient):
                 if(len(ack) == WINDOW_SIZE):
                     # All packets are OK
                     print("ALL PACKETS OK!!!!!!")
-                    rx_acks = []
                 else:
                     # Some packets are wrong, they will send the ones that are good
                     print("Some packets are wrong")
                     for ack_idx in ack:
                         rx_acks += 1
                         rx_acks_bools[ack_idx] = 1
+                    print("Number of acks " +str(rx_acks))
         window_counter += 1
 else: 
     for window_counter in range(tot_packets//WINDOW_SIZE):
