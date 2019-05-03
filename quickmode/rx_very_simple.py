@@ -64,9 +64,9 @@ while loop:
         ask_for_rtx = False
         end_of_window = False
         last_window = 32
+        window = 0
 
         while(not end_of_window):
-
             while(radio_rx.available()):
 
                 # First check of the payload
@@ -74,24 +74,24 @@ while loop:
                 receive_payload = radio_rx.read(length)
                 # now process rx_payload
                 header = receive_payload[0]
-                if(header > 127):
-                    # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
-                    last_packet = True
-                    frame_id = 0x7f & header
-                    last_window = int(frame_id) % WINDOW_SIZE
-                    # frames.append(receive_payload[1:])
-                else:
-                    # hex 7f is 127 i.e. 1111111
-                    frame_id = 0x7f & header
-                    window_id = int(frame_id) % WINDOW_SIZE
-                    print("Received packet id: " + str(frame_id))
+                frame_id = 0x7f & header
+                if(window <= (int(frame_id) / 32) % 127):
+                    if(header > 127):
+                        # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
+                        last_packet = True
 
-                    if(window_id not in rx_id):
-                        rx_id.append(window_id)
-                    window_bytes[window_id:window_id + data_size] = receive_payload[1:]
+                        last_window = int(frame_id) % WINDOW_SIZE
+                        # frames.append(receive_payload[1:])
+                    else:
+                        window_id = int(frame_id) % WINDOW_SIZE
+                        print("Received packet id: " + str(frame_id))
 
-                if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
-                    end_of_window = True
+                        if(window_id not in rx_id):
+                            rx_id.append(window_id)
+                        window_bytes[window_id:window_id + data_size] = receive_payload[1:]
+
+                    if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
+                        end_of_window = True
 
 
             # send correct ids (rx_id)
@@ -103,6 +103,7 @@ while loop:
         # Once all the window is received correctly, store the packets
         frames.append(window_bytes)
         print("End of window, packet saved")
+        window += 1
         # If it is the last packet save the txt
 
 
