@@ -51,7 +51,8 @@ WINDOW_SIZE = 32 # TODO: Put in config file
 efficient = False
 # TODO: to avoid this code mess (below), make classes transmitter and receiver, these ones will have methods like: stop_and_wait(already implemented), sliding_window (this one)
 if(not efficient):
-    for window_counter in range(tot_packets//WINDOW_SIZE):    
+    for window_counter in range(tot_packets//WINDOW_SIZE):
+        
         # rx_acks => remaining packets to send
         t = time.time()
         rx_acks = [ i for i in range(WINDOW_SIZE)] # esto de crear la lista asi y aqui no me gusta, habra que cambiarlo, por un contador? --> efficient version
@@ -80,9 +81,11 @@ if(not efficient):
                 ack = radio_rx.read(radio_rx.getDynamicPayloadSize())
                 if(len(ack) == WINDOW_SIZE):
                     # All packets are OK
+                    print("ALL PACKETS OK!!!!!!")
                     rx_acks = []
                 else:
                     # Some packets are wrong, they will send the ones that are good
+                    print("Some packets are wrong")
                     for ack_idx in ack:
                         del rx_acks[ack_idx]
                         rx_acks_bools[ack_idx] = 1
