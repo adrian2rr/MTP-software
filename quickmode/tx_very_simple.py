@@ -52,7 +52,6 @@ efficient = False
 # TODO: to avoid this code mess (below), make classes transmitter and receiver, these ones will have methods like: stop_and_wait(already implemented), sliding_window (this one)
 if(not efficient):
     for window_counter in range(tot_packets//WINDOW_SIZE):
-        
         # rx_acks => remaining packets to send
         t = time.time()
         rx_acks = 0 # esto de crear la lista asi y aqui no me gusta, habra que cambiarlo, por un contador? --> efficient version
@@ -60,8 +59,6 @@ if(not efficient):
         elapsed = time.time() - t
         print("Elapsed time = " + str(elapsed))
         timeout = False
-        # Start timeout
-        
         # si ha saltado el timeout o el numbero de acks recibidos es menor que la window size tendra que enviar 
         while( (rx_acks < WINDOW_SIZE) or (timeout) ): 
             timeout = False
@@ -89,12 +86,14 @@ if(not efficient):
                     # Some packets are wrong, they will send the ones that are good
                     print("Some packets are wrong")
                     for ack_idx in ack:
-                        rx_acks += 1
-                        rx_acks_bools[ack_idx] = 1
+                        if(rx_acks_bools[ack_idx] == 0):
+                            rx_acks += 1
+                            rx_acks_bools[ack_idx] = 1
                     print("ACKS array")
                     print(rx_acks_bools)
                     print("Number of acks " +str(rx_acks))
-        window_counter += 1
+
+        
 else: 
     for window_counter in range(tot_packets//WINDOW_SIZE):
         retransmit = False # Se pone a True si hay que retransmitir, ya sea por timeout o por que se lo pide el receptor
