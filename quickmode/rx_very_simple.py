@@ -95,9 +95,10 @@ while loop:
 
 
         # send correct ids (rx_id)
-        if(rx_id[:-1] == WINDOW_SIZE - 1):
-            print("Sending ACK: " + str(rx_id.sort()))
-            radio_tx.send(bytes(rx_id.sort()))
+        rx_id = rx_id.sort()
+        if(rx_id[-1] == WINDOW_SIZE - 1):
+            print("Sending ACK: " + str(rx_id))
+            radio_tx.send(bytes(rx_id))
 
     # Once all the window is received correctly, store the packets
     frames.append(window_bytes)
