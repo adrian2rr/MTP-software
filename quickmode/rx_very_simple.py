@@ -78,12 +78,12 @@ while loop:
                 # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                 last_packet = True
                 frame_id = 0x7f & header
-                last_window = frame_id % WINDOW_SIZE
+                last_window = int(frame_id) % WINDOW_SIZE
                 # frames.append(receive_payload[1:])
             else:
                 # hex 7f is 127 i.e. 1111111
                 frame_id = 0x7f & header
-                window_id = frame_id % WINDOW_SIZE
+                window_id = int(frame_id) % WINDOW_SIZE
                 if(window_id not in rx_id):
                     rx_id.append(window_id)
                 window_bytes[window_id:window_id + data_size] = receive_payload[1:]
