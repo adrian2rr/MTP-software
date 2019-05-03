@@ -72,7 +72,6 @@ if(not efficient):
             # Once it has sent all the packets in the window it checks the ACK and checks the timeout
             started_waiting_at = millis()
             while (not radio_rx.available()) or (not timeout):
-                
                 if (millis() - started_waiting_at) > int(config.timeout_time):
                     timeout = True
                     started_waiting_at = millis()
@@ -81,6 +80,7 @@ if(not efficient):
                 print("Ha saltado el timeout")
             else:
                 # There is sth in the receiver
+                print("I listen to ACK")
                 ack = radio_rx.read(radio_rx.getDynamicPayloadSize())
                 if(len(ack) == WINDOW_SIZE):
                     # All packets are OK
