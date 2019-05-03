@@ -54,7 +54,10 @@ efficient = False
 if(not efficient):
     for window_counter in range(tot_packets//WINDOW_SIZE):    
         # rx_acks => remaining packets to send
+        t = time.time()
         rx_acks = [ i for i in range(WINDOW_SIZE)] # esto de crear la lista asi y aqui no me gusta, habra que cambiarlo, por un contador? --> efficient version
+        elapsed = time.time() -t
+        print("Elapsed time = " + str(elapsed))
         timeout = False
         # Start timeout
         started_waiting_at = millis()
@@ -62,11 +65,14 @@ if(not efficient):
         while( (len(rx_acks) > 0) or (not timeout) ): 
             for packet_index in rx_acks:
                 radio_tx.write(packets[window_counter * WINDOW_SIZE + packet_index])
+                print("tx packet " + str(packet_index))
             # Once it has sent all the packets in the window it cheks the ACK and checks the timeout
             while (not radio_rx.available()) and (not timeout):
+                print("Checking time")
                 if (millis() - started_waiting_at) > int(config.timeout_time):
                     timeout = True
             if(timeout):
+                print("Ha saltado el timeout")
                 timeout = False
             else:
                 # There is sth in the receiver
