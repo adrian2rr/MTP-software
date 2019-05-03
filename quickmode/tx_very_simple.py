@@ -91,6 +91,8 @@ if(not efficient):
                     for ack_idx in ack:
                         rx_acks += 1
                         rx_acks_bools[ack_idx] = 1
+                    print("ACKS array")
+                    print(rx_acks_bools)
                     print("Number of acks " +str(rx_acks))
         window_counter += 1
 else: 
