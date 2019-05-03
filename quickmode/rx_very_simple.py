@@ -91,7 +91,7 @@ while loop:
                 end_of_window = True
 
         # send correct ids (rx_id)
-        if(rx_id[-1] == WINDOW_SIZE - 1):
+        if(rx_id[:-1] == WINDOW_SIZE - 1):
             radio_tx.send(bytes(rx_id.sort()))
 
     # Once all the window is received correctly, store the packets
@@ -100,7 +100,7 @@ while loop:
 
 
     if last_packet:
-        #led.green()
+        # led.green()
         print('Reception complete.')
         # If we are here it means we received all the frames so we have to uncompress
         print("Type of the list")
@@ -108,7 +108,7 @@ while loop:
         print("Type of one element")
         print(type(frames[0]))
         uncompressed_frames = zlib.decompress(bytes(frames))
-        f = open('file'+str(num_file)+'.txt','wb')
+        f = open('file' + str(num_file) + '.txt', 'wb')
         f.write(bytes(uncompressed_frames))
         f.close()
         print('File saved')
