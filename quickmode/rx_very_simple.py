@@ -88,7 +88,7 @@ while loop:
                     rx_id.append(window_id)
                 window_bytes[window_id:window_id + data_size] = receive_payload[1:]
 
-            if(len(rx_id) == WINDOW_SIZE or len(rx_id) == int(last_window) + 1):
+            if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
                 end_of_window = True
 
         # send correct ids (rx_id)
