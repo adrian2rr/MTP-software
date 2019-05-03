@@ -1,5 +1,5 @@
 {
-  "document_path": "../files/in1.txt",
+  "document_path": "../files/test_input_1.txt",
   "payload_size": "32",
   "timeout_time": "500"
 }
