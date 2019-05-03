@@ -90,8 +90,9 @@ while loop:
 
             print("Last window:")
             print(type(last_window))
+            print(type(rx_id))
             print("Len RX id is: " + str(len(rx_id)))
-            
+
             if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
                 end_of_window = True
 
