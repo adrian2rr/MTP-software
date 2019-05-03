@@ -84,6 +84,8 @@ while loop:
                 # hex 7f is 127 i.e. 1111111
                 frame_id = 0x7f & header
                 window_id = int(frame_id) % WINDOW_SIZE
+                print("Received packet id: " + str(frame_id))
+
                 if(window_id not in rx_id):
                     rx_id.append(window_id)
                 window_bytes[window_id:window_id + data_size] = receive_payload[1:]
@@ -91,12 +93,15 @@ while loop:
             if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
                 end_of_window = True
 
+
         # send correct ids (rx_id)
         if(rx_id[:-1] == WINDOW_SIZE - 1):
+            print("Sending ACK: " + str(rx_id.sort()))
             radio_tx.send(bytes(rx_id.sort()))
 
     # Once all the window is received correctly, store the packets
     frames.append(window_bytes)
+    print("End of window, packet saved")
     # If it is the last packet save the txt
 
 
