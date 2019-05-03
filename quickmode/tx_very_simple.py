@@ -72,7 +72,7 @@ if(not efficient):
             # Once it has sent all the packets in the window it checks the ACK and checks the timeout
             started_waiting_at = millis()
             while (not radio_rx.available()) or (not timeout):
-                print("Checking time")
+                
                 if (millis() - started_waiting_at) > int(config.timeout_time):
                     timeout = True
                     started_waiting_at = millis()
