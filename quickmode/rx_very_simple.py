@@ -56,7 +56,7 @@ data_size = 31
 loop = True
 
 while loop:
-    if(rx.available()):
+    if(radio_rx.available()):
         # Set window variables
         rx_id = []      # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to ask for retx of pkt 3 and 5
         window_bytes = [0] * WINDOW_SIZE * data_size
