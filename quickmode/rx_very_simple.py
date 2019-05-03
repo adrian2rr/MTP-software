@@ -1,6 +1,6 @@
 from __future__ import print_function
 import time
-from RF24 import *
+# from RF24 import *
 import zlib
 from utils.radio import configure_radios
 from utils.config import get_args, process_config
@@ -92,12 +92,11 @@ while loop:
 
         # send correct ids (rx_id)
         if(rx_id[-1] == WINDOW_SIZE - 1):
-            radio_tx.send(bytes(rx_id))
+            radio_tx.send(bytes(rx_id.sort()))
 
     # Once all the window is received correctly, store the packets
     frames.append(window_bytes)
     # If it is the last packet save the txt
-
 
 
     if last_packet:
@@ -123,40 +122,31 @@ while loop:
 
 
 
+# loop = True
+# # forever loop
+# while loop:
 
+#     # Pong back role.  Receive each packet, dump it out, and send ACK
+#     if radio_rx.available():
+#         while radio_rx.available():
+#             #First check of the payload
+#             len = radio_rx.getDynamicPayloadSize()
+#             receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
+#             #print('Got payload eot={} value="{}"'.format(receive_payload[0], receive_payload[1:31].decode('utf-8')))
 
+#             # Save it if is not a duplicate packet
+#             print('received_payload'+str(receive_payload[0]))
+#             if receive_payload[0] == packet_number:
+#                 packet_number = (packet_number+1)%2
+#                 print('packet number'+str(packet_number))
+#                 # Append the information
+#                 frames += receive_payload[2:]
 
+#             # Check if it is last packet
+#             if receive_payload[1] == 1:
+#                 print('Last packet')
+#                 last_packet = True
 
-
-
-
-loop = True
-# forever loop
-while loop:
-
-    # Pong back role.  Receive each packet, dump it out, and send ACK
-    if radio_rx.available():
-        while radio_rx.available():
-            #First check of the payload
-            len = radio_rx.getDynamicPayloadSize()
-            receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
-            #print('Got payload eot={} value="{}"'.format(receive_payload[0], receive_payload[1:31].decode('utf-8')))
-            
-            # Save it if is not a duplicate packet
-            print('received_payload'+str(receive_payload[0]))
-            if receive_payload[0] == packet_number:
-                packet_number = (packet_number+1)%2
-                print('packet number'+str(packet_number))
-                # Append the information
-                frames += receive_payload[2:]
-            
-            # Check if it is last packet            
-            if receive_payload[1] == 1:
-                print('Last packet')
-                last_packet = True
-
-            # Send Ack
-            radio_tx.write(bytes([0]))
-            print('Sent response.')
-
-            
+#             # Send Ack
+#             radio_tx.write(bytes([0]))
+#             print('Sent response.')
