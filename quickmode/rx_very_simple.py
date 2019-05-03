@@ -88,6 +88,10 @@ while loop:
                     rx_id.append(window_id)
                 window_bytes[window_id:window_id + data_size] = receive_payload[1:]
 
+            print("Last window:")
+            print(type(last_window))
+            print("Len RX id is: " + str(len(rx_id)))
+            
             if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
                 end_of_window = True
 
