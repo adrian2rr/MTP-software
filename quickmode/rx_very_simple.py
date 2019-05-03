@@ -77,7 +77,7 @@ while loop:
                 # now process rx_payload
                 header = receive_payload[0]
                 frame_id = 0x7f & header
-                if(window <= (int(frame_id) / 32) % 127):
+                if(window < (int(frame_id) / 32) % 127):
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
@@ -96,7 +96,7 @@ while loop:
                     if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
                         end_of_window = True
                 else:
-                    print("Sending ACK: " + str(rx_id_old))
+                    print("Sending ACK old: " + str(rx_id_old))
                     radio_tx.write(bytes(rx_id_old))
 
 
