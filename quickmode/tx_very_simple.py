@@ -55,27 +55,30 @@ if(not efficient):
         
         # rx_acks => remaining packets to send
         t = time.time()
-        rx_acks = [ i for i in range(WINDOW_SIZE)] # esto de crear la lista asi y aqui no me gusta, habra que cambiarlo, por un contador? --> efficient version
-        rx_acks_bools = [0] * WINDOW_SIZE
+        rx_acks = 0 # esto de crear la lista asi y aqui no me gusta, habra que cambiarlo, por un contador? --> efficient version
+        rx_acks_bools = [0] * WINDOW_SIZE # 0 if the receiver has not received the packet, 1 if the receiver has sent ACK
         elapsed = time.time() - t
         print("Elapsed time = " + str(elapsed))
         timeout = False
         # Start timeout
-        started_waiting_at = millis()
+        
         # si ha saltado el timeout o el numbero de acks recibidos es menor que la window size tendra que enviar 
-        while( (len(rx_acks) > 0) or (not timeout) ): 
-            for packet_index in rx_acks:
+        while( (rx_acks < WINDOW_SIZE) or (timeout) ): 
+            timeout = False
+            for packet_index in range(len(rx_acks_bools)):
                 if(rx_acks_bools[packet_index] == 0):
                     radio_tx.write(packets[window_counter * WINDOW_SIZE + packet_index])
                     print("tx packet " + str(packet_index))
-            # Once it has sent all the packets in the window it cheks the ACK and checks the timeout
-            while (not radio_rx.available()) and (not timeout):
+            # Once it has sent all the packets in the window it checks the ACK and checks the timeout
+            started_waiting_at = millis()
+            while (not radio_rx.available()) or (not timeout):
                 print("Checking time")
                 if (millis() - started_waiting_at) > int(config.timeout_time):
                     timeout = True
+                    started_waiting_at = millis()
+                    
             if(timeout):
                 print("Ha saltado el timeout")
-                timeout = False
             else:
                 # There is sth in the receiver
                 ack = radio_rx.read(radio_rx.getDynamicPayloadSize())
@@ -87,7 +90,7 @@ if(not efficient):
                     # Some packets are wrong, they will send the ones that are good
                     print("Some packets are wrong")
                     for ack_idx in ack:
-                        del rx_acks[ack_idx]
+                        rx_acks += 1
                         rx_acks_bools[ack_idx] = 1
         window_counter += 1
 else: 
