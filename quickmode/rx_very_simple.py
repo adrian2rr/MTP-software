@@ -70,8 +70,8 @@ while loop:
         while(radio_rx.available()):
 
             # First check of the payload
-            len = radio_rx.getDynamicPayloadSize()
-            receive_payload = radio_rx.read(len)
+            length = radio_rx.getDynamicPayloadSize()
+            receive_payload = radio_rx.read(length)
             # now process rx_payload
             header = receive_payload[0]
             if(header > 127):
@@ -87,11 +87,6 @@ while loop:
                 if(window_id not in rx_id):
                     rx_id.append(window_id)
                 window_bytes[window_id:window_id + data_size] = receive_payload[1:]
-
-            print("Last window:")
-            print(type(last_window))
-            print(type(rx_id))
-            print("Len RX id is: " + str(len(rx_id)))
 
             if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
                 end_of_window = True
