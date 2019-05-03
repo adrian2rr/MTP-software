@@ -58,13 +58,13 @@ loop = True
 while loop:
 
     # Set window variables
-    rx_id  = [] # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to as for retx of pkt 3 and 5
+    rx_id  = [] # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to ask for retx of pkt 3 and 5
     window_bytes = [0] * WINDOW_SIZE * data_size
     last_packet = False
     ask_for_rtx = False
-
+    
     while(radio_rx.available()):
-        #First check of the payload
+        # First check of the payload
         len = radio_rx.getDynamicPayloadSize()
         receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
         # now process rx_payload
@@ -78,13 +78,6 @@ while loop:
             rx_id.append(frame_id)
             window_bytes[frame_id:frame_id+data_size] = receive_payload[1:] 
 
-        if(len(rx_id) < WINDOW_SIZE):
-
-        # Once all the window is received correctly, store the packets
-        frames.append(window_bytes)
-        
-        break
-        
         # If it is the last packet save the txt
         if last_packet:
             #led.green()
@@ -107,6 +100,15 @@ while loop:
             led.off()
             loop = 0
 
+
+        if(len(rx_id) < WINDOW_SIZE):
+
+        # Once all the window is received correctly, store the packets
+        frames.append(window_bytes)
+        
+        break
+        
+        
 
 
 

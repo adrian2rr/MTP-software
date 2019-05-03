@@ -66,19 +66,19 @@ if(not efficient):
             while (not radio_rx.available()) and (not timeout):
                 if (millis() - started_waiting_at) > int(config.timeout_time):
                     timeout = True
-            if(timeout): 
+            if(timeout):
                 timeout = False
             else:
                 # There is sth in the receiver
                 ack = radio_rx.read(ACK_SIZE)
               
-                if(ack[0]=255):
+                if(ack[0] == 255):
                     # All packets are OK, go to the next window
                     rx_acks = []
                 else:
-                    for ack_idx in range(ACK_SIZE):
+                    for ack_idx in ack:
                         del rx_acks[ack_idx]
-
+        window_counter += 1
 else: 
     for window_counter in range(tot_packets//WINDOW_SIZE):
         retransmit = False # Se pone a True si hay que retransmitir, ya sea por timeout o por que se lo pide el receptor
