@@ -80,9 +80,10 @@ while loop:
                 frame_id = 0x3f & header
                 ack_sent = False
 
-                print("Received packet id: " + str(frame_id) + " window: " + str(window))
+                print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
 
                 if(window != window_old):
+                    ack_old = False
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
@@ -103,7 +104,7 @@ while loop:
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if(len(rx_id) > 0 and ((rx_id[-1] == WINDOW_SIZE - 1 and not ack_sent))):
+            if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1 and not ack_sent):
                 print("Sending ACK: " + str(rx_id))
                 radio_tx.write(bytes(rx_id))
                 rx_id_old = rx_id
@@ -112,7 +113,6 @@ while loop:
             if (ack_old):
                 print("Sending ACK old: " + str(rx_id))
                 radio_tx.write(bytes(rx_id_old))
-                ack_old = False
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32):
