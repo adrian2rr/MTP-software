@@ -57,8 +57,7 @@ loop = True
 window_old = 0
 rx_id_old = []
 last_packet = False
-timeout = 5
-start_waiting = 0
+
 
 while loop:
     if(radio_rx.available()):
@@ -70,7 +69,7 @@ while loop:
         ack_sent = False
 
         while(not end_of_window):
-            if(radio_rx.available()):
+            while(radio_rx.available()):
 
                 # First check of the payload
                 length = radio_rx.getDynamicPayloadSize()
@@ -79,6 +78,7 @@ while loop:
                 header = receive_payload[0]
                 window = 0x40 & header
                 frame_id = 0x3f & header
+                ack_sent = False
 
                 print("Received packet id: " + str(frame_id))
 
@@ -104,18 +104,12 @@ while loop:
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1):
+            if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1 and not ack_sent):
                 print("Sending ACK: " + str(rx_id))
                 radio_tx.write(bytes(rx_id))
                 rx_id_old = rx_id
                 start_waiting = millis()
                 ack_sent = True
-
-            if (ack_sent and millis() > start_waiting + timeout):
-                print("Sending ACK: " + str(rx_id))
-                radio_tx.write(bytes(rx_id))
-                rx_id_old = rx_id
-                start_waiting = millis()
 
         # Once all the window is received correctly, store the packets
         frames.append(window_bytes)
