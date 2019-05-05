@@ -57,7 +57,7 @@ else:
 # TODO: to avoid this code mess (below), make classes transmitter and receiver, these ones will have methods like: stop_and_wait(already implemented), sliding_window (this one)
 for window_counter in range(rang):
     if (rang-window_counter<1):
-        window = (rang-(window_counter-1)*WINDOW_SIZE)*WINDOW_SIZE
+        window = (tot_packets-(window_counter)*WINDOW_SIZE)
 
     print("-----------------------------------------------------")
     print("Sending window " + str(window_counter))
