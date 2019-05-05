@@ -92,7 +92,6 @@ while loop:
                             rx_id.append(window_id)
                             ack_sent = False
 
-                        end_of_window = True
                         window_bytes[frame_id * 31:frame_id * 31 + len(receive_payload[1:])] = receive_payload[1:]
 
                     else:
@@ -101,7 +100,7 @@ while loop:
                             ack_sent = False
 
                         window_bytes[frame_id * 31:frame_id * 31 + len(receive_payload[1:])] = receive_payload[1:]
-                    if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window)):
+                    if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window + 1)):
                         end_of_window = True
                 else:
                     ack_old = True
