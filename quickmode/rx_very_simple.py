@@ -69,7 +69,7 @@ while loop:
 
 
         while(not end_of_window):
-            while(radio_rx.available()):
+            if(radio_rx.available()):
 
                 # First check of the payload
                 length = radio_rx.getDynamicPayloadSize()
@@ -77,7 +77,10 @@ while loop:
                 # now process rx_payload
                 header = receive_payload[0]
                 frame_id = 0x7f & header
-                if(window < (int(frame_id) / 32) % 127):
+
+                # checks the ack of the last frame has arrived
+                # the window is made of 32 frame ids
+                if(window <= (int(frame_id) / 32) % 128):
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
