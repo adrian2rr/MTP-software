@@ -37,9 +37,9 @@ class PacketManager(object):
             data_to_tx = doc.read()
 
         # COMPRESS
-        data_to_tx_compressed = self._compress(data_to_tx)
+        # data_to_tx_compressed = self._compress(data_to_tx)
         # FRAGMENT
-        fragments = self._fragment_file(data_to_tx_compressed)
+        fragments = self._fragment_file(data_to_tx)
 
         packet_number = len(fragments)
         
