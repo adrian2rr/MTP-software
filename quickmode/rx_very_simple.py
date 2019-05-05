@@ -121,7 +121,7 @@ while loop:
                 ack_old = False
 
         # Once all the window is received correctly, store the packets
-        if(len(rx_id) == 32 or len(rx_id) == last_window):
+        if(len(rx_id) == 32 or len(rx_id) == last_window + 1):
             frames += window_bytes
             print("End of window " + str(window) + ", packet saved")
             window_old = window
