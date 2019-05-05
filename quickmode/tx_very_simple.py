@@ -93,6 +93,8 @@ for window_counter in range(tot_packets//WINDOW_SIZE):
             print(rx_acks_bools)
             wrong_packets = WINDOW_SIZE - rx_acks
             print("Wrong packets " + str(wrong_packets))
+    print("-----------------------------------------------------")
+    print("Sending window " + str(window_counter))
 
         
 
