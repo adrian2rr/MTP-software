@@ -10,7 +10,7 @@ class PacketManager(object):
         self.data_size = 30
         self.use_compression = False
         self.window_size = 32
-        self.id_range = 128
+        
     def create(self):
         packets = []
         with open(self.document, 'rb') as doc:
@@ -141,17 +141,26 @@ class PacketManager(object):
         *-------------------------------------------------------------*
         | X X X X X X X X |                  DATA                     |
         *-------------------------------------------------------------*
-        | EOT (1b) - WIN_ID(7b) |            DATA                     |
+        | EOT (1b) - WN (1b) - WIN_ID(6b) |            DATA                     |
         *-------------------------------------------------------------*
-        Maximum window size = 128
+        EOT: End of file
+        WN: Window Number (0) or (1)
+        WIN_ID: 0..64
+        Maximum window size = 64
         """
         packet = []
-        id_in_window = fragment_id % self.id_range
+        id_in_window = fragment_id % self.window_size
+        
+        window_number = 0x00
+        if((fragment_id%(2*self.window_size)>=self.window_size)):
+            window_number = 0x40
+
         eot = 0x00
         if(fragment_id == packet_number - 1):
             eot = 0x80
         # We do the OR so the eot is just the first bit instead of the whole byte
-        header = eot | id_in_window
+        header = eot | window_number
+        header = header | id_in_window
         packet = bytes([header])
         packet += compressed_fragment
         return packet

@@ -52,11 +52,8 @@ WINDOW_SIZE = 32 # TODO: Put in config file
 
 for window_counter in range(tot_packets//WINDOW_SIZE):
     # rx_acks => remaining packets to send
-    t = time.time()
-    rx_acks = 0 # esto de crear la lista asi y aqui no me gusta, habra que cambiarlo, por un contador? --> efficient version
+    rx_acks = 0 
     rx_acks_bools = [0] * WINDOW_SIZE # 0 if the receiver has not received the packet, 1 if the receiver has sent ACK
-    elapsed = time.time() - t
-    print("Elapsed time = " + str(elapsed))
     timeout = False
     # si ha saltado el timeout o el numbero de acks recibidos es menor que la window size tendra que enviar 
     while( (rx_acks < WINDOW_SIZE) or (timeout) ): 
