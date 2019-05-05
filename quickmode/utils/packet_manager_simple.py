@@ -7,7 +7,7 @@ class PacketManager(object):
         super(PacketManager, self).__init__()
         self.document = document
         self.payload_size = 32
-        self.data_size = 30
+        self.data_size = 31
         self.use_compression = False
         self.window_size = 32
         
