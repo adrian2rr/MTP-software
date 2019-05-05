@@ -137,8 +137,6 @@ while loop:
             # led.green()
             print('Reception complete.')
             # If we are here it means we received all the frames so we have to uncompress
-            print("List: ")
-            print(frames)
             print("Type of the list")
             print(type(frames))
             print("Type of one element")
