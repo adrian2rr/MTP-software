@@ -92,6 +92,7 @@ while loop:
                             rx_id.append(window_id)
                             ack_sent = False
 
+                        end_of_window = True
                         window_bytes[window_id:window_id + data_size] = receive_payload[1:]
 
                     else:
