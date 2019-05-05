@@ -54,6 +54,8 @@ led.blue()
 WINDOW_SIZE = 32
 data_size = 31
 loop = True
+window = 0
+rx_id_old = []
 
 while loop:
     if(radio_rx.available()):
@@ -64,8 +66,6 @@ while loop:
         ask_for_rtx = False
         end_of_window = False
         last_window = 32
-        window = 0
-        rx_id_old = []
 
         while(not end_of_window):
             if(radio_rx.available()):
