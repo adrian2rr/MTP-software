@@ -77,6 +77,8 @@ while loop:
                 header = receive_payload[0]
                 frame_id = 0x7f & header
 
+                print("Received packet id: " + str(frame_id))
+
                 # checks the ack of the last frame has arrived
                 # the window is made of 32 frame ids
                 if(window <= (int(frame_id) / 32) % 128):
@@ -86,7 +88,6 @@ while loop:
                         last_window = int(frame_id) % WINDOW_SIZE
                     else:
                         window_id = int(frame_id) % WINDOW_SIZE
-                        print("Received packet id: " + str(frame_id))
 
                         if(window_id not in rx_id):
                             rx_id.append(window_id)
@@ -110,7 +111,7 @@ while loop:
         # Once all the window is received correctly, store the packets
         frames.append(window_bytes)
         print("End of window " + str(window) + ", packet saved")
-        window += 1
+        window += 1 % 4
         # If it is the last packet save the txt
 
 
