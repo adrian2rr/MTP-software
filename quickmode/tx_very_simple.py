@@ -47,18 +47,26 @@ i=0
 tot_packets = len(packets)
 window_counter = 0
 WINDOW_SIZE = 32 # TODO: Put in config file
+window = 32
+if(tot_packets%WINDOW_SIZE==0):
+    rang = tot_packets//WINDOW_SIZE
+else:
+    rang = tot_packets//WINDOW_SIZE+1
+
 
 # TODO: to avoid this code mess (below), make classes transmitter and receiver, these ones will have methods like: stop_and_wait(already implemented), sliding_window (this one)
+for window_counter in range(rang):
+    if (rang-window_counter<1):
+        window = (rang-window_counter*WINDOW_SIZE)*WINDOW_SIZE
 
-for window_counter in range(tot_packets//WINDOW_SIZE):
     print("-----------------------------------------------------")
     print("Sending window " + str(window_counter))
     # rx_acks => remaining packets to send
     rx_acks = 0 
-    rx_acks_bools = [0] * WINDOW_SIZE # 0 if the receiver has not received the packet, 1 if the receiver has sent ACK
+    rx_acks_bools = [0] * window # 0 if the receiver has not received the packet, 1 if the receiver has sent ACK
     timeout = False
     # si ha saltado el timeout o el numbero de acks recibidos es menor que la window size tendra que enviar 
-    while( (rx_acks < WINDOW_SIZE) or (timeout) ): 
+    while( (rx_acks < window) or (timeout) ): 
         timeout = False
         for packet_index in range(len(rx_acks_bools)):
             if(rx_acks_bools[packet_index] == 0):
@@ -91,7 +99,7 @@ for window_counter in range(tot_packets//WINDOW_SIZE):
                     rx_acks_bools[ack_idx] = 1
             print("ACKS array")
             print(rx_acks_bools)
-            wrong_packets = WINDOW_SIZE - rx_acks
+            wrong_packets = window - rx_acks
             print("Wrong packets " + str(wrong_packets))
     
 
