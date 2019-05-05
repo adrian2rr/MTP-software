@@ -141,7 +141,7 @@ while loop:
             print(type(frames))
             print("Type of one element")
             print(type(frames[0]))
-            frame_bytes = []
+            frame_bytes = ''
             for item in frames:
                 frame_bytes += str(item)
             frame_bytes = bytes([int(frame_bytes)])
