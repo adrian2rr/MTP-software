@@ -80,7 +80,7 @@ while loop:
                 frame_id = 0x3f & header
                 ack_sent = False
 
-                print("Received packet id: " + str(frame_id))
+                print("Received packet id: " + str(frame_id) + " window: " + str(window))
 
                 if(window != window_old):
                     if(header > 127):
@@ -119,7 +119,7 @@ while loop:
             frames.append(window_bytes)
             print("End of window " + str(window) + ", packet saved")
             window_old = window
-
+            rx_id_old = rx_id
 
         # If it is the last packet save the txt
 
