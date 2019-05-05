@@ -10,7 +10,7 @@ from utils.ledManager import ledManager
 """
 TODO: Create packet manager that reassembles the packets instead of reassembling the packets in the last if
 """
-
+compression = False
 
 try:
     args = get_args()
@@ -141,14 +141,20 @@ while loop:
             print(type(frames))
             print("Type of one element")
             print(type(frames[0]))
-            uncompressed_frames = []
-            for item in frames:
-                uncompressed_frames.extend(zlib.decompress(bytes(item)))
+            if compression:
+                uncompressed_frames = []
+                for item in frames:
+                    uncompressed_frames.extend(zlib.decompress(bytes(item)))
 
-            f = open('file' + str(num_file) + '.txt', 'wb')
-            f.write(bytes(uncompressed_frames))
-            f.close()
-            print('File saved')
+                f = open('file' + str(num_file) + '.txt', 'wb')
+                f.write(bytes(uncompressed_frames))
+                f.close()
+                print('File saved')
+            else:
+                f = open('file' + str(num_file) + '.txt', 'wb')
+                f.write(bytes(frames))
+                f.close()
+                print('File saved')
             frames = []
             last_packet = False
             num_packets = 0
