@@ -54,18 +54,20 @@ led.blue()
 WINDOW_SIZE = 32
 data_size = 31
 loop = True
-window = 0
+window_old = 0
 rx_id_old = []
+last_packet = False
+timeout = 5
+start_waiting = 0
 
 while loop:
     if(radio_rx.available()):
         # Set window variables
         rx_id = []      # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to ask for retx of pkt 3 and 5
         window_bytes = [0] * WINDOW_SIZE * data_size
-        last_packet = False
-        ask_for_rtx = False
         end_of_window = False
         last_window = 32
+        ack_sent = False
 
         while(not end_of_window):
             if(radio_rx.available()):
@@ -75,13 +77,12 @@ while loop:
                 receive_payload = radio_rx.read(length)
                 # now process rx_payload
                 header = receive_payload[0]
-                frame_id = 0x7f & header
+                window = 0x40 & header
+                frame_id = 0x3f & header
 
                 print("Received packet id: " + str(frame_id))
 
-                # checks the ack of the last frame has arrived
-                # the window is made of 32 frame ids
-                if(window <= (int(frame_id) / 32) % 128):
+                if(window != window_old):
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
@@ -107,12 +108,20 @@ while loop:
                 print("Sending ACK: " + str(rx_id))
                 radio_tx.write(bytes(rx_id))
                 rx_id_old = rx_id
+                start_waiting = millis()
+                ack_sent = True
+
+            if (ack_sent and millis() > start_waiting + timeout):
+                print("Sending ACK: " + str(rx_id))
+                radio_tx.write(bytes(rx_id))
+                rx_id_old = rx_id
+                start_waiting = millis()
 
         # Once all the window is received correctly, store the packets
         frames.append(window_bytes)
-        print("End of window " + str(window) + ", packet saved")
+        print("End of window " + str(window_old) + ", packet saved")
 
-        window = (window + 1) % 4
+        window_old = window
         # If it is the last packet save the txt
 
 
