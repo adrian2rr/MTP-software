@@ -58,6 +58,8 @@ else:
 for window_counter in range(rang):
     if (tot_packets/WINDOW_SIZE-window_counter<1):
         window = (tot_packets-(window_counter)*WINDOW_SIZE)
+        print("Window")
+        print(window)
 
     print("-----------------------------------------------------")
     print("Sending window " + str(window_counter))
