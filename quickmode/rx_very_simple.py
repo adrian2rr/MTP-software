@@ -141,12 +141,10 @@ while loop:
             print(type(frames))
             print("Type of one element")
             print(type(frames[0]))
-            frame_bytes = b''
+            uncompressed_frames = []
             for item in frames:
-                frame_bytes += bytes(int(item))
+                uncompressed_frames.extend(zlib.decompress(item))
 
-
-            uncompressed_frames = zlib.decompress(frame_bytes)
             f = open('file' + str(num_file) + '.txt', 'wb')
             f.write(bytes(uncompressed_frames))
             f.close()
