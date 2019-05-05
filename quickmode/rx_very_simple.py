@@ -103,12 +103,15 @@ while loop:
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if(len(rx_id) > 0 and ((rx_id[-1] == WINDOW_SIZE - 1 and not ack_sent) or ack_old)):
+            if(len(rx_id) > 0 and ((rx_id[-1] == WINDOW_SIZE - 1 and not ack_sent))):
                 print("Sending ACK: " + str(rx_id))
                 radio_tx.write(bytes(rx_id))
                 rx_id_old = rx_id
-                start_waiting = millis()
                 ack_sent = True
+
+            if (ack_old):
+                print("Sending ACK: " + str(rx_id))
+                radio_tx.write(bytes(rx_id_old))
                 ack_old = False
 
         # Once all the window is received correctly, store the packets
