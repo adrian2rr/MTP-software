@@ -78,12 +78,10 @@ while loop:
                 header = receive_payload[0]
                 window = 0x40 & header
                 frame_id = 0x3f & header
-                ack_sent = False
 
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
 
                 if(window != window_old):
-                    ack_old = False
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
@@ -94,6 +92,7 @@ while loop:
 
                         if(window_id not in rx_id):
                             rx_id.append(window_id)
+                            ack_sent = False
 
                         window_bytes[window_id:window_id + data_size] = receive_payload[1:]
 
@@ -113,6 +112,7 @@ while loop:
             if (ack_old):
                 print("Sending ACK old: " + str(rx_id_old))
                 radio_tx.write(bytes(rx_id_old))
+                ack_old = False
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or last_packet):
