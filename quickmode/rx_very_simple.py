@@ -67,7 +67,6 @@ while loop:
         window = 0
         rx_id_old = []
 
-
         while(not end_of_window):
             if(radio_rx.available()):
 
@@ -105,14 +104,14 @@ while loop:
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1):
+            if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1 and not radio_rx.available()):
                 print("Sending ACK: " + str(rx_id))
                 radio_tx.write(bytes(rx_id))
                 rx_id_old = rx_id
 
         # Once all the window is received correctly, store the packets
         frames.append(window_bytes)
-        print("End of window, packet saved")
+        print("End of window " + str(window) + " , packet saved")
         window += 1
         # If it is the last packet save the txt
 
