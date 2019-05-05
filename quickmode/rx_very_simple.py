@@ -63,7 +63,7 @@ while loop:
     if(radio_rx.available()):
         # Set window variables
         rx_id = []      # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to ask for retx of pkt 3 and 5
-        window_bytes = [0] * WINDOW_SIZE * data_size
+        window_bytes = []
         end_of_window = False
         last_window = 32
         ack_sent = False
@@ -133,6 +133,8 @@ while loop:
             # led.green()
             print('Reception complete.')
             # If we are here it means we received all the frames so we have to uncompress
+            print("List: ")
+            print(frames)
             print("Type of the list")
             print(type(frames))
             print("Type of one element")
