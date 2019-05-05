@@ -81,7 +81,7 @@ while loop:
 
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
 
-                if(window != window_old and not (last_packet and len(rx_id) == last_window)):
+                if(window != window_old and not last_packet):
                     window_id = int(frame_id) % WINDOW_SIZE
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
