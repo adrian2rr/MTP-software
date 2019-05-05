@@ -97,7 +97,7 @@ while loop:
 
                         window_bytes[window_id:window_id + data_size] = receive_payload[1:]
 
-                    if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == int(last_window) + 1)):
+                    if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window)):
                         end_of_window = True
                 else:
                     ack_old = True
