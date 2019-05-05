@@ -10,6 +10,7 @@ class PacketManager(object):
         self.data_size = 30
         self.use_compression = False
         self.window_size = 32
+        self.id_range = 128
     def create(self):
         packets = []
         with open(self.document, 'rb') as doc:
@@ -142,10 +143,10 @@ class PacketManager(object):
         *-------------------------------------------------------------*
         | EOT (1b) - WIN_ID(7b) |            DATA                     |
         *-------------------------------------------------------------*
-        Maximum window size = 127
+        Maximum window size = 128
         """
         packet = []
-        id_in_window = fragment_id % self.window_size
+        id_in_window = fragment_id % self.id_range
         eot = 0x00
         if(fragment_id == packet_number - 1):
             eot = 0x80
