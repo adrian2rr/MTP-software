@@ -111,7 +111,8 @@ while loop:
         # Once all the window is received correctly, store the packets
         frames.append(window_bytes)
         print("End of window " + str(window) + ", packet saved")
-        window += 1 % 4
+
+        window = (window + 1) % 4
         # If it is the last packet save the txt
 
 
