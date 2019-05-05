@@ -110,15 +110,17 @@ while loop:
                 ack_sent = True
 
             if (ack_old):
-                print("Sending ACK: " + str(rx_id))
+                print("Sending ACK old: " + str(rx_id))
                 radio_tx.write(bytes(rx_id_old))
                 ack_old = False
 
         # Once all the window is received correctly, store the packets
-        frames.append(window_bytes)
-        print("End of window " + str(window) + ", packet saved")
+        if(len(rx_id) == 32):
+            frames.append(window_bytes)
+            print("End of window " + str(window) + ", packet saved")
+            window_old = window
 
-        window_old = window
+
         # If it is the last packet save the txt
 
 
