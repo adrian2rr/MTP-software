@@ -57,7 +57,7 @@ loop = True
 window_old = -1
 ack_old = False
 last_packet = False
-
+rx_id_old = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
 
 while loop:
     if(radio_rx.available()):
@@ -107,7 +107,6 @@ while loop:
             if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1 and not ack_sent):
                 print("Sending ACK: " + str(rx_id))
                 radio_tx.write(bytes(rx_id))
-                rx_id_old = rx_id
                 ack_sent = True
 
             if (ack_old):
@@ -119,7 +118,6 @@ while loop:
             frames.append(window_bytes)
             print("End of window " + str(window) + ", packet saved")
             window_old = window
-            rx_id_old = rx_id
 
         # If it is the last packet save the txt
 
