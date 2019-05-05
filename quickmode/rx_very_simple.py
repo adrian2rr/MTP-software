@@ -117,7 +117,7 @@ while loop:
 
             if (ack_old):
                 if(last_packet):
-                    rx_id_old = rx_id_old[:last_window]
+                    rx_id_old = rx_id_old[:last_window + 1]
 
                 print("Sending ACK old: " + str(rx_id_old))
                 radio_tx.write(bytes(rx_id_old))
