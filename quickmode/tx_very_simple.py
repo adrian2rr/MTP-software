@@ -51,6 +51,8 @@ WINDOW_SIZE = 32 # TODO: Put in config file
 # TODO: to avoid this code mess (below), make classes transmitter and receiver, these ones will have methods like: stop_and_wait(already implemented), sliding_window (this one)
 
 for window_counter in range(tot_packets//WINDOW_SIZE):
+    print("-----------------------------------------------------")
+    print("Sending window " + str(window_counter))
     # rx_acks => remaining packets to send
     rx_acks = 0 
     rx_acks_bools = [0] * WINDOW_SIZE # 0 if the receiver has not received the packet, 1 if the receiver has sent ACK
@@ -83,6 +85,7 @@ for window_counter in range(tot_packets//WINDOW_SIZE):
             
             for ack_idx in ack:
                 if(rx_acks_bools[ack_idx] == 0):
+                    # It was wrong and not is OK
                     print("Packet " + str(ack_idx) + " correct")
                     rx_acks += 1
                     rx_acks_bools[ack_idx] = 1
@@ -90,17 +93,6 @@ for window_counter in range(tot_packets//WINDOW_SIZE):
             print(rx_acks_bools)
             wrong_packets = WINDOW_SIZE - rx_acks
             print("Wrong packets " + str(wrong_packets))
-    print("-----------------------------------------------------")
-    print("Sending window " + str(window_counter))
-
-        
-
-            
-            
-
-
-
-
-
+    
 
 led.off()

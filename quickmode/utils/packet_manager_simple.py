@@ -50,7 +50,7 @@ class PacketManager(object):
         # There could be cases in which the ratio packet_number/win_size is not an integer
         padding_in_last_window = packet_number % self.window_size
         # these packets below will not be decoded by the receiver
-        for i in range(padding_in_last_window):
+        for i in range(packet_number, padding_in_last_window+packet_number):
             pad_packet = [0] * self.payload_size
             pad_packet = bytes(pad_packet)
             packets.append(pad_packet)
