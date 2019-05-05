@@ -83,9 +83,7 @@ while loop:
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
-
                         last_window = int(frame_id) % WINDOW_SIZE
-                        # frames.append(receive_payload[1:])
                     else:
                         window_id = int(frame_id) % WINDOW_SIZE
                         print("Received packet id: " + str(frame_id))
@@ -104,14 +102,14 @@ while loop:
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1 and not radio_rx.available()):
+            if(len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1):
                 print("Sending ACK: " + str(rx_id))
                 radio_tx.write(bytes(rx_id))
                 rx_id_old = rx_id
 
         # Once all the window is received correctly, store the packets
         frames.append(window_bytes)
-        print("End of window " + str(window) + " , packet saved")
+        print("End of window " + str(window) + ", packet saved")
         window += 1
         # If it is the last packet save the txt
 
