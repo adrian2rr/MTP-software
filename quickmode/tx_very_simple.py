@@ -94,7 +94,7 @@ for window_counter in range(rang):
             # Some packets are wrong, they will send the ones that are good
             print("Dynamic payload size = ")
             print((ack))
-            for ack_idx in ack:
+            for ack_idx in ack[0:window]:
                 if(rx_acks_bools[ack_idx] == 0):
                     # It was wrong and not is OK
                     
