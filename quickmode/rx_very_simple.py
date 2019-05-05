@@ -137,9 +137,9 @@ while loop:
             print(type(frames))
             print("Type of one element")
             print(type(frames[0]))
-            uncompressed_frames = zlib.decompress(bytes(frames))
+            #uncompressed_frames = zlib.decompress(bytes(frames))
             f = open('file' + str(num_file) + '.txt', 'wb')
-            f.write(bytes(uncompressed_frames))
+            f.write(bytes(frames))
             f.close()
             print('File saved')
             frames = []
