@@ -114,10 +114,15 @@ while loop:
                 radio_tx.write(bytes(rx_id))
                 ack_sent = True
 
+
             if (ack_old):
+                if(last_packet):
+                    rx_id_old = rx_id_old[:last_window]
+
                 print("Sending ACK old: " + str(rx_id_old))
                 radio_tx.write(bytes(rx_id_old))
                 ack_old = False
+
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or len(rx_id) == last_window + 1):
