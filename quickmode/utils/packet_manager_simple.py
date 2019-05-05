@@ -54,7 +54,6 @@ class PacketManager(object):
             pad_packet = [0] * self.payload_size
             pad_packet = bytes(pad_packet)
             packets.append(pad_packet)
-
         return packets
 
 
