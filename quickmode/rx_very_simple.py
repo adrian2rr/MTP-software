@@ -54,7 +54,7 @@ led.blue()
 WINDOW_SIZE = 32
 data_size = 31
 loop = True
-window_old = 0
+window_old = -1
 rx_id_old = []
 last_packet = False
 
