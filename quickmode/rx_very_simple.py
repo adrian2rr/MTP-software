@@ -82,14 +82,19 @@ while loop:
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
 
                 if(window != window_old):
+                    window_id = int(frame_id) % WINDOW_SIZE
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
                         last_window = int(frame_id) % WINDOW_SIZE
                         print("EOT!")
-                    else:
-                        window_id = int(frame_id) % WINDOW_SIZE
+                        if(window_id not in rx_id):
+                            rx_id.append(window_id)
+                            ack_sent = False
 
+                        window_bytes[window_id:window_id + data_size] = receive_payload[1:]
+
+                    else:
                         if(window_id not in rx_id):
                             rx_id.append(window_id)
                             ack_sent = False
@@ -116,7 +121,7 @@ while loop:
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or last_packet):
-            frames.append(window_bytes)
+            frames.extend(window_bytes)
             print("End of window " + str(window) + ", packet saved")
             window_old = window
 
