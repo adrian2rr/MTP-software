@@ -133,7 +133,7 @@ while loop:
         # If it is the last packet save the txt
 
 
-        if last_packet:
+        if last_packet and len(rx_id) == last_window + 1:
             # led.green()
             print('Reception complete.')
             # If we are here it means we received all the frames so we have to uncompress
