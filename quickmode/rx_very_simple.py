@@ -62,7 +62,7 @@ rx_id_old = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 1
 while loop:
     if(radio_rx.available()):
         # Set window variables
-        rx_id = []      # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to ask for retx of pkt 3 and 5
+        rx_id = [0]      # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to ask for retx of pkt 3 and 5
         window_bytes = [0] * WINDOW_SIZE * data_size
         end_of_window = False
         last_window = 32
