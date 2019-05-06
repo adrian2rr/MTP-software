@@ -63,8 +63,7 @@ while loop:
     if(radio_rx.available()):
         # Set window variables
         rx_id = []      # The receiver will check this after receiving a window. Example: [0, 1, 2, 4, 6] --> I have to ask for retx of pkt 3 and 5
-        # window_bytes = [0] * WINDOW_SIZE * data_size
-        window_bytes = []
+        window_bytes = [0] * WINDOW_SIZE * data_size
         end_of_window = False
         last_window = 32
         ack_sent = False
@@ -93,13 +92,13 @@ while loop:
                             rx_id.append(frame_id)
                             ack_sent = False
 
-                        window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 2] = receive_payload[1:]
+                        window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 1] = receive_payload[1:]
                     else:
                         if(frame_id not in rx_id):
                             rx_id.append(frame_id)
                             ack_sent = False
 
-                        window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 2] = receive_payload[1:]
+                        window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 1] = receive_payload[1:]
                     if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window + 1)):
                         end_of_window = True
                 else:
