@@ -55,7 +55,9 @@ WINDOW_SIZE = 31
 data_size = 31
 loop = True
 window_old = -1
+ack_old = False
 last_packet = False
+rx_id_old = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
 
 while loop:
     if(radio_rx.available()):
@@ -76,6 +78,7 @@ while loop:
                 header = receive_payload[0]
                 window = 0x40 & header
                 frame_id = int(0x3f & header)
+                rx_id[0] = window / 64
 
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
                 # print(receive_payload[1:])
@@ -100,18 +103,28 @@ while loop:
                     if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window + 1)):
                         end_of_window = True
 
+                        rx_id_old = rx_id
+
+                else:
+                    ack_old = True
+
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if((len(rx_id) > 0 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent)):
-                if(window / 64 == 1):
-                    radio_tx.write(bytes([1].extend(rx_id)))
-                else:
-                    radio_tx.write(bytes([0].extend(rx_id)))
+            if((len(rx_id) > 0 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent) and not ack_old):
 
+                radio_tx.write(bytes(rx_id))
                 print("Sent ACK: " + str(rx_id))
                 ack_sent = True
 
+
+            if (ack_old):
+                if(last_packet):
+                    rx_id_old = rx_id_old[:last_window + 1]
+
+                radio_tx.write(bytes(rx_id_old))
+                print("Sent ACK old: " + str(rx_id_old))
+                ack_old = False
 
 
         # Once all the window is received correctly, store the packets
