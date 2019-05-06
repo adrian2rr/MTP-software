@@ -91,8 +91,8 @@ while loop:
                         if(frame_id not in rx_id):
                             rx_id.append(frame_id)
                             ack_sent = False
-
-                        window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 1] = receive_payload[1:]
+                        last_packet_size = len(receive_payload)
+                        window_bytes[frame_id * data_size:frame_id * data_size + last_packet_size - 1] = receive_payload[1:]
                     else:
                         if(frame_id not in rx_id):
                             rx_id.append(frame_id)
@@ -130,7 +130,7 @@ while loop:
             window_old = window
 
         if(len(rx_id) == last_window + 1):
-            frames.extend(bytes(window_bytes[:(last_window) * data_size - 1]))
+            frames.extend(bytes(window_bytes[:(last_window) * data_size + last_packet_size - 1]))
 
             print("End of window " + str(window) + ", packet saved")
             window_old = window
