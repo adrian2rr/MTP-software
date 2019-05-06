@@ -31,7 +31,7 @@ channel_RX = 70
 payload_size = config.payload_size
 
 # Start radios
-radio_tx, radio_rx = configure_radios(channel_TX, channel_RX,1)
+radio_tx, radio_rx = configure_radios(channel_TX, channel_RX, 1)
 radio_rx.startListening()
 radio_tx.stopListening()
 
@@ -39,9 +39,9 @@ radio_tx.stopListening()
 packet_manager = PacketManager(config.document_path)
 packets = packet_manager.create_window()
 
-#Define loop variables
+# Define loop variables
 led.violet()
-i=0
+i = 0
 
 # We'll have tot_packets/WINDOW_SIZE windows sent, in each window we'll send WINDOW_SIZE packets
 tot_packets = len(packets)
