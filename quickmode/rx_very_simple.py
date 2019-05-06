@@ -107,9 +107,9 @@ while loop:
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if((len(rx_id) > 0 and rx_id[-1] == WINDOW_SIZE - 1 and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent) and not ack_old):
-                print("Sending ACK: " + str(rx_id))
+            if((len(rx_id) > 0 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent) and not ack_old):
                 radio_tx.write(bytes(rx_id))
+                print("Sent ACK: " + str(rx_id))
                 ack_sent = True
 
 
@@ -117,8 +117,9 @@ while loop:
                 if(last_packet):
                     rx_id_old = rx_id_old[:last_window + 1]
 
-                print("Sending ACK old: " + str(rx_id_old))
+
                 radio_tx.write(bytes(rx_id_old))
+                print("Sent ACK old: " + str(rx_id_old))
                 ack_old = False
 
 
