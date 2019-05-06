@@ -124,7 +124,7 @@ while loop:
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or len(rx_id) == last_window + 1):
-            frames += bytes(window_bytes)
+            frames.append(bytes(window_bytes))
 
             print("End of window " + str(window) + ", packet saved")
             window_old = window
