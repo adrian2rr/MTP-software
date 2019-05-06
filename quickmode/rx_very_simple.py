@@ -52,7 +52,7 @@ packet_ack = packet_manager_ack.create()
 led.blue()
 
 WINDOW_SIZE = 32
-data_size = 31
+data_size = 30
 loop = True
 window_old = -1
 ack_old = False
@@ -92,13 +92,13 @@ while loop:
                             rx_id.append(frame_id)
                             ack_sent = False
 
-                        window_bytes[frame_id * 30:frame_id * 30 + len(receive_payload) - 2] = receive_payload[1:]
+                        window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 2] = receive_payload[1:]
                     else:
                         if(frame_id not in rx_id):
                             rx_id.append(frame_id)
                             ack_sent = False
 
-                        window_bytes[frame_id * 30:frame_id * 30 + len(receive_payload) - 2] = receive_payload[1:]
+                        window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 2] = receive_payload[1:]
                     if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window + 1)):
                         end_of_window = True
                 else:
