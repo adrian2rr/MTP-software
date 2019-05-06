@@ -10,7 +10,7 @@ from utils.ledManager import ledManager
 """
 TODO: Create packet manager that reassembles the packets instead of reassembling the packets in the last if
 """
-compression = False
+compression = True
 
 try:
     args = get_args()
