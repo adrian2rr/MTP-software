@@ -143,7 +143,7 @@ while loop:
             if compression:
                 uncompressed_frames = []
                 for item in frames:
-                    uncompressed_frames.extend(zlib.decompress(bytes(item)))
+                    uncompressed_frames.extend(zlib.decompress(item))
 
                 f = open('file' + str(num_file) + '.txt', 'wb')
                 f.write(bytes(uncompressed_frames))
@@ -151,7 +151,7 @@ while loop:
                 print('File saved')
             else:
                 f = open('file' + str(num_file) + '.txt', 'wb')
-                f.write(bytes(frames))
+                f.write(frames)
                 f.close()
                 print('File saved')
             frames = []
