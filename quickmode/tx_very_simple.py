@@ -91,7 +91,7 @@ for window_counter in range(rang):
             # Some packets are wrong, they will send the ones that are good
             print("Received ACK = ")
             print((ack))
-            for ack_idx in ack[1:]:
+            for ack_idx in ack[1:window]:
                 if(rx_acks_bools[ack_idx] == 0 and ack[0] == window_counter%2):
                     # It was wrong and not is OK
                     print("Packet " + str(ack_idx) + " correct")
