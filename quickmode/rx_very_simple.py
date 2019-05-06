@@ -140,6 +140,9 @@ while loop:
             print(type(frames))
             print("Type of one element")
             print(type(frames[0]))
+            print("Size of the list")
+            print(len(frames))
+
             if compression:
                 uncompressed_frames = []
                 for item in frames:
@@ -148,12 +151,12 @@ while loop:
                 f = open('file' + str(num_file) + '.txt', 'wb')
                 f.write(bytes(uncompressed_frames))
                 f.close()
-                print('File saved')
+                print('File saved with name: ' + 'file' + str(num_file) + '.txt')
             else:
                 f = open('file' + str(num_file) + '.txt', 'wb')
-                f.write(frames)
+                f.write(frames[0])
                 f.close()
-                print('File saved')
+                print('File saved with name: ' + 'file' + str(num_file) + '.txt')
             frames = []
             last_packet = False
             num_packets = 0
