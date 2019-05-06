@@ -101,26 +101,14 @@ while loop:
                         window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 1] = receive_payload[1:]
                     if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window + 1)):
                         end_of_window = True
-                else:
-                    ack_old = True
 
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if((len(rx_id) > 0 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent) and not ack_old):
+            if((len(rx_id) > 0 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent)):
                 radio_tx.write(bytes(rx_id))
                 print("Sent ACK: " + str(rx_id))
                 ack_sent = True
-
-
-            if (ack_old):
-                if(last_packet):
-                    rx_id_old = rx_id_old[:last_window + 1]
-
-
-                radio_tx.write(bytes(rx_id_old))
-                print("Sent ACK old: " + str(rx_id_old))
-                ack_old = False
 
 
         # Once all the window is received correctly, store the packets
