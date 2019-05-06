@@ -53,7 +53,7 @@ if(tot_packets%WINDOW_SIZE==0):
 else:
     rang = tot_packets//WINDOW_SIZE+1
 
-
+# Don't touch this
 # TODO: to avoid this code mess (below), make classes transmitter and receiver, these ones will have methods like: stop_and_wait(already implemented), sliding_window (this one)
 for window_counter in range(rang):
     print(window)
