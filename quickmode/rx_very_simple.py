@@ -57,7 +57,7 @@ loop = True
 window_old = -1
 ack_old = False
 last_packet = False
-rx_id_old = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+rx_id_old = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 
 while loop:
     if(radio_rx.available()):
@@ -89,7 +89,7 @@ while loop:
                         last_packet = True
                         last_window = int(frame_id)
                         print("EOT!")
-                        if(frame_id not in rx_id):
+                        if(frame_id not in rx_id[1:]):
                             rx_id.append(frame_id)
                             ack_sent = False
                         last_packet_size = len(receive_payload)
@@ -120,7 +120,7 @@ while loop:
 
             if (ack_old):
                 if(last_packet):
-                    rx_id_old = rx_id_old[:last_window + 1]
+                    rx_id_old = rx_id_old[:last_window + 2]
 
                 radio_tx.write(bytes(rx_id_old))
                 print("Sent ACK old: " + str(rx_id_old))
