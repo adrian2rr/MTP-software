@@ -78,7 +78,7 @@ while loop:
                 header = receive_payload[0]
                 window = 0x40 & header
                 frame_id = int(0x3f & header)
-                rx_id[0] = window / 64
+                rx_id[0] = window // 64
 
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
                 # print(receive_payload[1:])
@@ -100,7 +100,7 @@ while loop:
                             ack_sent = False
 
                         window_bytes[frame_id * data_size:frame_id * data_size + len(receive_payload) - 1] = receive_payload[1:]
-                    if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window + 1)):
+                    if((len(rx_id) == WINDOW_SIZE + 1) or (len(rx_id) == last_window + 2)):
                         end_of_window = True
 
                         rx_id_old = rx_id
@@ -111,7 +111,7 @@ while loop:
 
             # send correct ids (rx_id)
             rx_id.sort()
-            if((len(rx_id) > 0 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent) and not ack_old):
+            if((len(rx_id) > 1 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 1 and rx_id[-1] == last_window and not ack_sent) and not ack_old):
 
                 radio_tx.write(bytes(rx_id))
                 print("Sent ACK: " + str(rx_id))
@@ -128,13 +128,13 @@ while loop:
 
 
         # Once all the window is received correctly, store the packets
-        if(len(rx_id) == 32):
+        if(len(rx_id) == WINDOW_SIZE + 1):
             frames.extend(bytes(window_bytes))
 
             print("End of window " + str(window) + ", packet saved")
             window_old = window
 
-        if(len(rx_id) == last_window + 1):
+        if(len(rx_id) == last_window + 2):
             frames.extend(bytes(window_bytes[:(last_window) * data_size + last_packet_size - 1]))
 
             print("End of window " + str(window) + ", packet saved")
@@ -142,7 +142,7 @@ while loop:
         # If it is the last packet save the txt
 
 
-        if last_packet and len(rx_id) == last_window + 1:
+        if last_packet and len(rx_id) == last_window + 2:
             # led.green()
             print("Type of frames element")
             print(type(frames[0]))
