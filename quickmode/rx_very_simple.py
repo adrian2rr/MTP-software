@@ -150,19 +150,8 @@ while loop:
 
         if last_packet and len(rx_id) == last_window + 2:
             # led.green()
-            print("Type of frames element")
-            print(type(frames[0]))
-            print("Type of window_bytes element")
-            print(type(window_bytes[0]))
-
             print('Reception complete.')
             # If we are here it means we received all the frames so we have to uncompress
-            print("Type of the list")
-            print(type(frames))
-            print("Type of one element")
-            print(type(frames[0]))
-            print("Size of the list")
-            print(len(frames))
 
             if compression:
                 uncompressed_frames = zlib.decompress(bytes(frames))
@@ -183,34 +172,3 @@ while loop:
             input('Press Enter to finish')
             led.off()
             loop = 0
-
-
-
-# loop = True
-# # forever loop
-# while loop:
-
-#     # Pong back role.  Receive each packet, dump it out, and send ACK
-#     if radio_rx.available():
-#         while radio_rx.available():
-#             #First check of the payload
-#             len = radio_rx.getDynamicPayloadSize()
-#             receive_payload = radio_rx.read(radio_rx.getDynamicPayloadSize())
-#             #print('Got payload eot={} value="{}"'.format(receive_payload[0], receive_payload[1:31].decode('utf-8')))
-
-#             # Save it if is not a duplicate packet
-#             print('received_payload'+str(receive_payload[0]))
-#             if receive_payload[0] == packet_number:
-#                 packet_number = (packet_number+1)%2
-#                 print('packet number'+str(packet_number))
-#                 # Append the information
-#                 frames += receive_payload[2:]
-
-#             # Check if it is last packet
-#             if receive_payload[1] == 1:
-#                 print('Last packet')
-#                 last_packet = True
-
-#             # Send Ack
-#             radio_tx.write(bytes([0]))
-#             print('Sent response.')
