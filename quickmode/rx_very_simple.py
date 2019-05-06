@@ -77,28 +77,28 @@ while loop:
                 # now process rx_payload
                 header = receive_payload[0]
                 window = 0x40 & header
-                frame_id = 0x3f & header
+                frame_id = int(0x3f & header)
 
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
                 # print(receive_payload[1:])
                 if(window != window_old):
-                    window_id = int(frame_id) % WINDOW_SIZE
+
                     if(header > 127):
                         # This means that eot = 1, the header field will be something like = 1XXX XXXX so it will be > 127
                         last_packet = True
-                        last_window = int(frame_id) % WINDOW_SIZE
+                        last_window = int(frame_id)
                         print("EOT!")
-                        if(window_id not in rx_id):
-                            rx_id.append(window_id)
+                        if(frame_id not in rx_id):
+                            rx_id.append(frame_id)
                             ack_sent = False
 
-                        window_bytes[frame_id * 31:frame_id * 31 + len(receive_payload[1:]) - 1] = receive_payload[1:]
+                        window_bytes[frame_id * 31:frame_id * 31 + len(receive_payload) - 2] = receive_payload[1:]
                     else:
-                        if(window_id not in rx_id):
-                            rx_id.append(window_id)
+                        if(frame_id not in rx_id):
+                            rx_id.append(frame_id)
                             ack_sent = False
 
-                        window_bytes[frame_id * 31:frame_id * 31 + len(receive_payload[1:]) - 1] = receive_payload[1:]
+                        window_bytes[frame_id * 31:frame_id * 31 + len(receive_payload) - 2] = receive_payload[1:]
                     if((len(rx_id) == WINDOW_SIZE) or (len(rx_id) == last_window + 1)):
                         end_of_window = True
                 else:
@@ -124,7 +124,7 @@ while loop:
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or len(rx_id) == last_window + 1):
-            frames += bytes(window_bytes[:-1])
+            frames.extend(bytes(window_bytes))
 
             print("End of window " + str(window) + ", packet saved")
             window_old = window
@@ -134,10 +134,10 @@ while loop:
 
         if last_packet and len(rx_id) == last_window + 1:
             # led.green()
-            print("Type of frames")
-            print(type(frames))
-            print("Type of window_bytes")
-            print(type(window_bytes))
+            print("Type of frames element")
+            print(type(frames[0]))
+            print("Type of window_bytes element")
+            print(type(window_bytes[0]))
 
             print('Reception complete.')
             # If we are here it means we received all the frames so we have to uncompress
