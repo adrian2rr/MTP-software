@@ -80,7 +80,7 @@ while loop:
                 frame_id = 0x3f & header
 
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
-                print(receive_payload[1:])
+                # print(receive_payload[1:])
                 if(window != window_old):
                     window_id = int(frame_id) % WINDOW_SIZE
                     if(header > 127):
@@ -124,7 +124,7 @@ while loop:
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or len(rx_id) == last_window + 1):
-            frames += bytes(window_bytes)
+            frames += bytes(window_bytes[:-1])
 
             print("End of window " + str(window) + ", packet saved")
             window_old = window
@@ -134,6 +134,11 @@ while loop:
 
         if last_packet and len(rx_id) == last_window + 1:
             # led.green()
+            print("Type of frames")
+            print(type(frames))
+            print("Type of window_bytes")
+            print(type(window_bytes))
+
             print('Reception complete.')
             # If we are here it means we received all the frames so we have to uncompress
             print("Type of the list")
