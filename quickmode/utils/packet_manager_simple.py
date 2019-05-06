@@ -106,10 +106,7 @@ class PacketManager(object):
         *----------------*
         | CRC-0B         |
         *----------------*
-        Header: Type_of_frame (ACK, NACK, DATA), Frame_ID, Payload_length, EOT (End of transmission)
-        Payload: Data
-        CRC:
-        :return:packet
+        
         """
         # TODO: Rules of ifs so that the correct index is assigned to each flag
         # TODO: Last fragment should include padding
@@ -162,6 +159,8 @@ class PacketManager(object):
         header = header | id_in_window
         packet = bytes([header])
         packet += compressed_fragment
+        print(len(compressed_fragment))
+        
         return packet
 
 class PacketManagerAck(object):
