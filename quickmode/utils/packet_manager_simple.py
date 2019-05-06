@@ -160,7 +160,7 @@ class PacketManager(object):
         packet = bytes([header])
         packet += compressed_fragment
         print(len(compressed_fragment))
-        
+        print(packet)
         return packet
 
 class PacketManagerAck(object):
