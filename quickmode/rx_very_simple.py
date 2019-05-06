@@ -51,13 +51,11 @@ packet_ack = packet_manager_ack.create()
 
 led.blue()
 
-WINDOW_SIZE = 32
+WINDOW_SIZE = 31
 data_size = 31
 loop = True
 window_old = -1
-ack_old = False
 last_packet = False
-rx_id_old = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
 
 while loop:
     if(radio_rx.available()):
@@ -106,9 +104,14 @@ while loop:
             # send correct ids (rx_id)
             rx_id.sort()
             if((len(rx_id) > 0 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 0 and rx_id[-1] == last_window and not ack_sent)):
-                radio_tx.write(bytes(rx_id))
+                if(window / 64 == 1):
+                    radio_tx.write(bytes([1].extend(rx_id)))
+                else:
+                    radio_tx.write(bytes([0].extend(rx_id)))
+
                 print("Sent ACK: " + str(rx_id))
                 ack_sent = True
+
 
 
         # Once all the window is received correctly, store the packets
