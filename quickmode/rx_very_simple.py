@@ -110,7 +110,13 @@ while loop:
 
 
             # send correct ids (rx_id)
-            rx_id.sort()
+
+            rx_id_1 = rx_id[0]
+            rx_id_2 = rx_id[1:]
+            rx_id_2.sort()
+            rx_id_1.extend(rx_id_2)
+            rx_id = rx_id_1
+
             if((len(rx_id) > 1 and rx_id[-1] == (WINDOW_SIZE - 1) and not ack_sent) or (len(rx_id) > 1 and rx_id[-1] == last_window and not ack_sent) and not ack_old):
 
                 radio_tx.write(bytes(rx_id))
