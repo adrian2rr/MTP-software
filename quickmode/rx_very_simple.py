@@ -95,7 +95,7 @@ while loop:
                         last_packet_size = len(receive_payload)
                         window_bytes[frame_id * data_size:frame_id * data_size + last_packet_size - 1] = receive_payload[1:]
                     else:
-                        if(frame_id not in rx_id):
+                        if(frame_id not in rx_id[1:]):
                             rx_id.append(frame_id)
                             ack_sent = False
 
