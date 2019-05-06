@@ -46,8 +46,8 @@ i=0
 # We'll have tot_packets/WINDOW_SIZE windows sent, in each window we'll send WINDOW_SIZE packets
 tot_packets = len(packets)
 window_counter = 0
-WINDOW_SIZE = 32 # TODO: Put in config file
-window = 32
+WINDOW_SIZE = 31 # TODO: Put in config file
+window = 31
 if(tot_packets%WINDOW_SIZE==0):
     rang = tot_packets//WINDOW_SIZE
 else:
@@ -88,17 +88,12 @@ for window_counter in range(rang):
             # There is sth in the receiver
             print("I listen to ACK")
             ack = radio_rx.read(radio_rx.getDynamicPayloadSize())
-            # if(len(ack) == WINDOW_SIZE):
-            #     # All packets are OK
-            #     print("ALL PACKETS OK!!!!!!")
-            # else:
             # Some packets are wrong, they will send the ones that are good
-            print("Dynamic payload size = ")
+            print("Received ACK = ")
             print((ack))
-            for ack_idx in ack[0:window]:
-                if(rx_acks_bools[ack_idx] == 0):
+            for ack_idx in ack[1:window]:
+                if(rx_acks_bools[ack_idx] == 0 and ack[0] == window_counter%2):
                     # It was wrong and not is OK
-                    
                     print("Packet " + str(ack_idx) + " correct")
                     rx_acks += 1
                     rx_acks_bools[ack_idx] = 1
