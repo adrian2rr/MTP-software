@@ -130,7 +130,7 @@ while loop:
             window_old = window
 
         if(len(rx_id) == last_window + 1):
-            frames.extend(bytes(window_bytes[:(last_window + 1) * data_size - 1]))
+            frames.extend(bytes(window_bytes[:(last_window) * data_size - 1]))
 
             print("End of window " + str(window) + ", packet saved")
             window_old = window
