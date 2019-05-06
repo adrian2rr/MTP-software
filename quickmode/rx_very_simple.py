@@ -80,7 +80,7 @@ while loop:
                 frame_id = 0x3f & header
 
                 print("Received packet id: " + str(frame_id) + " window: " + str(window) + " window old: " + str(window_old))
-
+                print(receive_payload[1:])
                 if(window != window_old):
                     window_id = int(frame_id) % WINDOW_SIZE
                     if(header > 127):
@@ -125,6 +125,7 @@ while loop:
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or len(rx_id) == last_window + 1):
             frames += window_bytes
+
             print("End of window " + str(window) + ", packet saved")
             window_old = window
 
