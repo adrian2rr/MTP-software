@@ -124,7 +124,7 @@ while loop:
 
         # Once all the window is received correctly, store the packets
         if(len(rx_id) == 32 or len(rx_id) == last_window + 1):
-            frames += bytes(window_bytes[:-1])
+            frames += bytes(window_bytes)
 
             print("End of window " + str(window) + ", packet saved")
             window_old = window
@@ -146,7 +146,7 @@ while loop:
             if compression:
                 uncompressed_frames = []
                 for item in frames:
-                    uncompressed_frames.extend(zlib.decompress(item))
+                    uncompressed_frames.extend(zlib.decompress(bytes(item)))
 
                 f = open('file' + str(num_file) + '.txt', 'wb')
                 f.write(bytes(uncompressed_frames))
@@ -154,7 +154,7 @@ while loop:
                 print('File saved with name: ' + 'file' + str(num_file) + '.txt')
             else:
                 f = open('file' + str(num_file) + '.txt', 'wb')
-                f.write(frames)
+                f.write(bytes(frames))
                 f.close()
                 print('File saved with name: ' + 'file' + str(num_file) + '.txt')
             frames = []
