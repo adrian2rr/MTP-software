@@ -111,7 +111,7 @@ while loop:
 
             # send correct ids (rx_id)
 
-            rx_id_1 = rx_id[0]
+            rx_id_1 = [rx_id[0]]
             rx_id_2 = rx_id[1:]
             rx_id_2.sort()
             rx_id_1.extend(rx_id_2)
