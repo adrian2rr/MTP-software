@@ -9,7 +9,7 @@ class PacketManager(object):
         self.payload_size = 32
         self.data_size = 31
         self.use_compression = False
-        self.window_size = 32
+        self.window_size = 31
         
     def create(self):
         packets = []
