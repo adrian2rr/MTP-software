@@ -52,7 +52,7 @@ packet_ack = packet_manager_ack.create()
 led.blue()
 
 WINDOW_SIZE = 32
-data_size = 30
+data_size = 31
 loop = True
 window_old = -1
 ack_old = False
