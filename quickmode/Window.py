@@ -12,7 +12,8 @@ from utils.ledManager import ledManager
 class Window(object):
 
     def __init__(self):
-        self.compression = PacketManager.use_compression
+        self.PM = PacketManager()
+        self.compression = self.PM.use_compression
         self.enable_print = False
         self.millis = lambda: int(round(time.time() * 1000))
         self.led = ledManager()
@@ -20,12 +21,12 @@ class Window(object):
         self.channel1 = 60
         # channel2: channel used for the acks sent from the receiving device
         self.channel2 = 70
-        self.WINDOW_SIZE = PacketManager.window_size
-        self.data_size = PacketManager.data_size
+        self.WINDOW_SIZE = self.PM.window_size
+        self.data_size = self.PM.data_size
         # self.fileout = "file0.txt"
         # self.config_file = "../configs/config_file.json"
         # self.config = utils.process_config(self.config_file)
-        self.payload_size = PacketManager.payload_size
+        self.payload_size = self.PM.payload_size
 
 
     def rx(self):
