@@ -1,7 +1,7 @@
 from utils.transceiver import transceiver
 from utils.ledManager import ledManager
-from utils.switchManager import switchManager
-import time
+from utils.buttonManager import buttonManager
+
 
 # Get arguments and initialize transceiver
 try:
@@ -12,49 +12,46 @@ except:
     print("missing or invalid arguments")
     exit(0)
 transceiver = transceiver(config.document_path, config.timeout_time)
-# Initialize switches and leds
-switches = switchManager()
+# Initialize buttons and leds
+buttons = buttonManager()
 led = ledManager()
 
-# Reset timeouts for selecting modes and functions
-mode_timeout = 0
-function_timeout = 0
+# Define end condition variables
+chek_mode = True
+end = False
 
-# Select mode
-while(mode_timeout == 0):
-    if(switches.getSwitch0):
+while(not end):
+    # Set ready led
+    led.white()
+
+    # Select mode
+    mode = buttons.getMode()
+    if(mode == 0):
         print('Short Range mode')
-        mode = 0
-        time.sleep(5)
-        if(switches.getSwitch0):
-            mode_timeout = 1
-            led.blue()
-    else:
+        led.red()
+        end
+    elif(mode == 1):
         print('Midle Range mode')
-        mode = 1
-        time.sleep(5)
-        if not (switches.getSwitch0):
-            mode_timeout = 1
-            led.green()
-
-# Select function
-while(function_timeout == 0):
-    if(switches.getSwitch1):
-        print('Receiver')
-        function = 0
-        time.sleep(5)
-        if(switches.getSwitch1):
-            function_timeout = 1
-            led.red()
-            transceiver.receive(mode)
+        led.green()
+    elif(mode == 2):
+        print('Network mode: not implemented')
+        led.blue()
     else:
+        chek_mode = False
+
+    # Select function
+    function = buttons.getFunction()
+    if(function == 0 and chek_mode):
+        print('Receiver')
+        transceiver.receive(mode)
+        end = True
+    if(function == 1):
         print('Transmitter')
-        function = 1
-        time.sleep(5)
-        if not (switches.getSwitch1):
-            function_timeout = 1
-            led.yellow()
-            transceiver.transmit(mode)
+        transceiver.transmit(mode)
+        end = True
+
+# Set transmission finished led
+led.yellow
 
 
 
