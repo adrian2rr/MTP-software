@@ -23,7 +23,7 @@ class Window(object):
         self.channel2 = 70
         self.WINDOW_SIZE = self.PM.window_size
         self.data_size = self.PM.data_size
-        # self.fileout = "file0.txt"
+        self.fileout = "file0.txt"
         # self.config_file = "../configs/config_file.json"
         # self.config = utils.process_config(self.config_file)
         self.payload_size = self.PM.payload_size
@@ -171,8 +171,7 @@ class Window(object):
         radio_tx.stopListening()
 
         # Create packets
-        packet_manager = PacketManager(utils.config.document_path)
-        packets = packet_manager.create_window()
+        packets = self.PM.create_window()
 
         # Define loop variables
         self.led.violet()
