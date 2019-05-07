@@ -5,7 +5,7 @@ import zlib
 from utils.packet_manager_simple import PacketManager, PacketManagerAck
 from utils.radio import configure_radios
 # from utils.config import get_args, process_config, payload_size
-import utils.config
+# import utils.config
 from utils.ledManager import ledManager
 
 
@@ -27,7 +27,7 @@ class Window(object):
         # self.config_file = "../configs/config_file.json"
         # self.config = utils.process_config(self.config_file)
         self.payload_size = self.PM.payload_size
-
+        self.timeout_time = self.PM.config.timeout_time
 
     def rx(self):
         print("Started RX")
@@ -212,7 +212,7 @@ class Window(object):
                 # Once it has sent all the packets in the window it checks the ACK and checks the timeout
                 started_waiting_at = self.millis()
                 while (not radio_rx.available()) and (not timeout):
-                    if (self.millis() - started_waiting_at) > int(utils.config.timeout_time):
+                    if (self.millis() - started_waiting_at) > int(self.timeout_time):
                         timeout = True
                         started_waiting_at = self.millis()
 
