@@ -1,16 +1,20 @@
 import zlib
 import crc8
-
+import config
 
 class PacketManager(object):
     def __init__(self, document):
         super(PacketManager, self).__init__()
         self.document = document
-        self.payload_size = 32
+        self.config_file = "../configs/config_file.json"
+        self.config = config.process_config(self.config_file)
+        self.payload_size = self.config.payload_size
+
+        # self.payload_size = 32
         self.data_size = 31
-        self.use_compression = False
+        self.use_compression = True
         self.window_size = 31
-        
+
     def create(self):
         packets = []
         with open(self.document, 'rb') as doc:
@@ -19,11 +23,10 @@ class PacketManager(object):
 
 
         data_to_tx_compressed = self._compress(data_to_tx)
-        
         fragments = self._fragment_file(data_to_tx_compressed)
 
         packet_number = len(fragments)
-		
+
         for frame_id, cf in enumerate(fragments):
             packet = self._create_packet(cf, frame_id, packet_number)
             packets.append(packet)
@@ -42,11 +45,11 @@ class PacketManager(object):
         fragments = self._fragment_file(data_to_tx_compressed)
 
         packet_number = len(fragments)
-        
+
         for fragment_id, cf in enumerate(fragments):
             packet = self._create_packet_window(cf, fragment_id, packet_number)
             packets.append(packet)
-        
+
         # There could be cases in which the ratio packet_number/win_size is not an integer
         # padding_in_last_window = packet_number % self.window_size
         # # these packets below will not be decoded by the receiver
@@ -57,14 +60,14 @@ class PacketManager(object):
         return packets
 
 
-          
+
 
     def _compress(self, data_to_compress, level = 6):
         """
         Params: data_to_compress
                 level
         Return: A list with bytes to be tx
-        """ 
+        """
         return zlib.compress(data_to_compress, level)
 
     def _generate_crc(self, line):
@@ -106,7 +109,7 @@ class PacketManager(object):
         *----------------*
         | CRC-0B         |
         *----------------*
-        
+
         """
         # TODO: Rules of ifs so that the correct index is assigned to each flag
         # TODO: Last fragment should include padding
