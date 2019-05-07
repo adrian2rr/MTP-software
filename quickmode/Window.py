@@ -24,8 +24,6 @@ class Window(object):
         self.WINDOW_SIZE = self.PM.window_size
         self.data_size = self.PM.data_size
         self.fileout = "file0.txt"
-        # self.config_file = "../configs/config_file.json"
-        # self.config = utils.process_config(self.config_file)
         self.payload_size = self.PM.payload_size
         self.timeout_time = self.PM.config.timeout_time
 
