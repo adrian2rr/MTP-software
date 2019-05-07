@@ -11,7 +11,7 @@ try:
 except:
     print("missing or invalid arguments")
     exit(0)
-transceiver = transceiver(config.document_path, config.timeout_time)
+transceiver = transceiver(config.document_path, config.timeout_time, config.compression)
 # Initialize buttons and leds
 buttons = buttonManager()
 led = ledManager()

@@ -1,5 +1,6 @@
 {
   "document_path": "./quickmode_file.txt",
   "payload_size": "32",
-  "timeout_time": "500"
+  "timeout_time": "500",
+  "Compression": "True"
 }
