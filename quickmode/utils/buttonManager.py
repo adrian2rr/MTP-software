@@ -14,7 +14,7 @@ class buttonManager:
         mode = -1
         end = False
         while(end):
-            if(not GPIO.input(35)):
+            if(not GPIO.input(29)):
                 if(mode == -1):
                     start_waiting = millis()
                 mode =+1
@@ -27,7 +27,7 @@ class buttonManager:
         function = -1
         end = False
         while(end):
-            if(not GPIO.input(35)):
+            if(not GPIO.input(31)):
                 if(function == -1):
                     start_waiting = millis()
                 function += 1
