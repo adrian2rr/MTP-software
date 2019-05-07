@@ -1,5 +1,5 @@
 {
-  "document_path": "../files/redundant.txt",
+  "document_path": "./quickmode_file.txt",
   "payload_size": "32",
   "timeout_time": "500"
 }
