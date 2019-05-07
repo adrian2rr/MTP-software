@@ -187,7 +187,9 @@ class Window(object):
             rang = tot_packets // self.WINDOW_SIZE + 1
 
         for window_counter in range(rang):
-            print(window)
+            if(self.enable_print):
+                print(window)
+
             if (tot_packets / self.WINDOW_SIZE - window_counter < 1):
                 window = (tot_packets - window_counter * self.WINDOW_SIZE)
                 if(self.enable_print):

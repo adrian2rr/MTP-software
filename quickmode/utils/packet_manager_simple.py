@@ -164,8 +164,8 @@ class PacketManager(object):
         header = header | id_in_window
         packet = bytes([header])
         packet += compressed_fragment
-        print(len(compressed_fragment))
-        print(packet)
+        #print(len(compressed_fragment))
+        #print(packet)
         return packet
 
 
