@@ -4,11 +4,11 @@ import utils.config
 
 
 class PacketManager(object):
-    def __init__(self, document):
+    def __init__(self):
         super(PacketManager, self).__init__()
-        self.document = document
         self.config_file = "../configs/config_file.json"
         self.config = utils.config.process_config(self.config_file)
+        self.document = self.config.document_path
         self.payload_size = self.config.payload_size
 
         # self.payload_size = 32
