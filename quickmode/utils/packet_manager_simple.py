@@ -1,19 +1,21 @@
 import zlib
 import crc8
-import config
+import utils.config
+
 
 class PacketManager(object):
     def __init__(self, document):
         super(PacketManager, self).__init__()
         self.document = document
         self.config_file = "../configs/config_file.json"
-        self.config = config.process_config(self.config_file)
+        self.config = utils.config.process_config(self.config_file)
         self.payload_size = self.config.payload_size
 
         # self.payload_size = 32
         self.data_size = 31
         self.use_compression = True
         self.window_size = 31
+        self.compression_level = 6
 
     def create(self):
         packets = []
@@ -62,13 +64,13 @@ class PacketManager(object):
 
 
 
-    def _compress(self, data_to_compress, level = 6):
+    def _compress(self, data_to_compress):
         """
         Params: data_to_compress
                 level
         Return: A list with bytes to be tx
         """
-        return zlib.compress(data_to_compress, level)
+        return zlib.compress(data_to_compress, self.compression_level)
 
     def _generate_crc(self, line):
 
@@ -117,17 +119,17 @@ class PacketManager(object):
         header = []
 
         # Compute header parameters
-        if(frame_id == packet_number-1):
+        if(frame_id == packet_number - 1):
             eot = 1
         else:
             eot = 0
 
-        identifier=frame_id%2
+        identifier = frame_id % 2
 
         # Create header
         header = bytes([identifier])
-        header +=bytes([eot])
-        
+        header += bytes([eot])
+
         # Append header to data
         packet = header
         packet += compressed_fragment
@@ -149,9 +151,9 @@ class PacketManager(object):
         """
         packet = []
         id_in_window = fragment_id % self.window_size
-        
+
         window_number = 0x00
-        if((fragment_id%(2*self.window_size)>=self.window_size)):
+        if((fragment_id % (2 * self.window_size) >= self.window_size)):
             window_number = 0x40
 
         eot = 0x00
@@ -166,6 +168,7 @@ class PacketManager(object):
         print(packet)
         return packet
 
+
 class PacketManagerAck(object):
 
     def __init__(self):
@@ -174,4 +177,3 @@ class PacketManagerAck(object):
     def create(self):
         ack = bytes([0])
         return ack
-
