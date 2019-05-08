@@ -28,11 +28,11 @@ def configure_radios(channel_TX, channel_RX, function, rate = 1):
 
     # Set radio data rate
     if(rate == 1):
-        radio_tx.setDataRate(RF24_PA_2MBPS)
-        radio_tx.setDataRate(RF24_PA_2MBPS)
+        radio_tx.setDataRate(RF24_2MBPS)
+        radio_tx.setDataRate(RF24_2MBPS)
     else:
-        radio_tx.setDataRate(RF24_PA_1MBPS)
-        radio_tx.setDataRate(RF24_PA_1MBPS)
+        radio_tx.setDataRate(RF24_1MBPS)
+        radio_tx.setDataRate(RF24_1MBPS)
 	
     # Disable auto ACK
     radio_tx.setAutoAck(False)
