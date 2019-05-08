@@ -27,7 +27,7 @@ def configure_radios(channel_TX, channel_RX, function, rate = 1):
     radio_rx.setPALevel(RF24_PA_MAX)
 
     # Set radio data rate
-	if(rate == 1):
+    if(rate == 1):
         radio_tx.setDataRate(RF24_PA_2MBPS)
         radio_tx.setDataRate(RF24_PA_2MBPS)
     else:
