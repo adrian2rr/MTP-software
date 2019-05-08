@@ -23,16 +23,4 @@ class buttonManager:
         return mode
 
     def getFunction(self):
-        millis = lambda: int(round(time.time() * 1000))
-        function = -1
-        end = False
-        while(end):
-            if(not GPIO.input(31)):
-                if(function == -1):
-                    start_waiting = millis()
-                function += 1
-            if(millis()-start_waiting > self.timeout):
-                end = True
-        return function
-
-    
+        return GPIO.input(31)

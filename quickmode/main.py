@@ -26,8 +26,8 @@ while(not end):
     led.white()
 
     # Select mode
-    # mode = buttons.getMode()
-    mode = 0
+    mode = buttons.getMode()
+    #mode = 0
     if(mode == 0):
         print('Short Range mode')
         window = Window.Window(args.config, 2)
@@ -46,8 +46,8 @@ while(not end):
         check_mode = False
 
     # Select function
-    # function = buttons.getFunction()
-    function = 0
+    function = buttons.getFunction()
+    #function = 0
     if(function == 0 and check_mode):
         print('Receiver')
         window.rx()
