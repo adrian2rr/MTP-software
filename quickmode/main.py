@@ -17,7 +17,7 @@ buttons = buttonManager()
 led = ledManager()
 
 # Define end condition variables
-chek_mode = True
+check_mode = True
 end = False
 
 while(not end):
@@ -25,7 +25,8 @@ while(not end):
     led.white()
 
     # Select mode
-    mode = buttons.getMode()
+    # mode = buttons.getMode()
+	mode = 0
     if(mode == 0):
         print('Short Range mode')
         led.red()
@@ -37,15 +38,16 @@ while(not end):
         print('Network mode: not implemented')
         led.blue()
     else:
-        chek_mode = False
+        check_mode = False
 
     # Select function
-    function = buttons.getFunction()
-    if(function == 0 and chek_mode):
+    # function = buttons.getFunction()
+	function = 0
+    if(function == 0 and check_mode):
         print('Receiver')
         transceiver.receive(mode)
         end = True
-    if(function == 1):
+    if(function == 1 and check_mode):
         print('Transmitter')
         transceiver.transmit(mode)
         end = True
