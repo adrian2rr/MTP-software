@@ -1,5 +1,4 @@
 import zlib
-import crc8
 import utils.config
 
 
@@ -70,14 +69,6 @@ class PacketManager(object):
         Return: A list with bytes to be tx
         """
         return zlib.compress(data_to_compress, self.compression_level)
-
-    def _generate_crc(self, line):
-
-        crc = crc8.crc8()
-        crc.update(line)
-        # using digest() to return bites in the format b'\xfb'
-        # to get only the hexadecimal value 'fb' use hexdigest()
-        return crc.digest()
 
     def _fragment_file(self, data_to_tx):
         """
