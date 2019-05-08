@@ -2,7 +2,7 @@ from __future__ import print_function
 import time
 import zlib
 
-from utils.packet_manager_simple import PacketManager, PacketManagerAck
+from utils.packet_manager_window import PacketManager, PacketManagerAck
 from utils.radio import configure_radios
 # from utils.config import get_args, process_config, payload_size
 # import utils.config
@@ -11,8 +11,8 @@ from utils.ledManager import ledManager
 
 class Window(object):
 
-    def __init__(self):
-        self.PM = PacketManager()
+    def __init__(self, config_file):
+        self.PM = PacketManager(config_file)
         self.compression = self.PM.use_compression
         self.enable_print = False
         self.millis = lambda: int(round(time.time() * 1000))
