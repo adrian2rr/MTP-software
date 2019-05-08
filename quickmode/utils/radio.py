@@ -2,7 +2,7 @@ from RF24 import *
 import RPi.GPIO as GPIO
 
 
-def configure_radios(channel_TX, channel_RX, function, rate):
+def configure_radios(channel_TX, channel_RX, function, rate = 1):
 
     # Setup CE and CSN pin with SPI velocity and define pipe adresses depending if it acts as a transmitter or as a receiver
     if (function==1):
@@ -27,7 +27,7 @@ def configure_radios(channel_TX, channel_RX, function, rate):
     radio_rx.setPALevel(RF24_PA_MAX)
 
     # Set radio data rate
-	if(rate = 1):
+	if(rate == 1):
         radio_tx.setDataRate(RF24_PA_2MBPS)
         radio_tx.setDataRate(RF24_PA_2MBPS)
     else:
