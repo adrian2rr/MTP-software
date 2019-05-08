@@ -99,6 +99,11 @@ class Window(object):
                             if((len(rx_id) == self.WINDOW_SIZE + 1) or (len(rx_id) == last_window + 2)):
                                 end_of_window = True
                                 rx_id_old = rx_id
+                                rx_id_old_1 = [rx_id_old[0]]
+                                rx_id_old_2 = rx_id_old[1:]
+                                rx_id_old_2.sort()
+                                rx_id_old_1.extend(rx_id_old_2)
+                                rx_id = rx_id_old_1
                         else:
                             ack_old = True
 
