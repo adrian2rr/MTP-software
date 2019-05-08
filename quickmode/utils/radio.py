@@ -2,7 +2,7 @@ from RF24 import *
 import RPi.GPIO as GPIO
 
 
-def configure_radios(channel_TX, channel_RX, function):
+def configure_radios(channel_TX, channel_RX, function, rate = 1):
 
     # Setup CE and CSN pin with SPI velocity and define pipe adresses depending if it acts as a transmitter or as a receiver
     if (function==1):
@@ -13,7 +13,7 @@ def configure_radios(channel_TX, channel_RX, function):
         radio_tx = RF24(RPI_V2_GPIO_P1_15, BCM2835_SPI_CS1, BCM2835_SPI_SPEED_8MHZ)
         radio_rx = RF24(RPI_V2_GPIO_P1_13, BCM2835_SPI_CS0, BCM2835_SPI_SPEED_8MHZ)
         pipes = [0xf0f0f0f0d2, 0xf0f0f0f0e1]
-	
+    
     # Initialize the transceivers
     radio_rx.begin()
     radio_tx.begin()
@@ -23,9 +23,17 @@ def configure_radios(channel_TX, channel_RX, function):
     radio_rx.setChannel(channel_RX)
 
     # Set configuration power
-    radio_tx.setPALevel(RF24_PA_LOW)
-    radio_rx.setPALevel(RF24_PA_LOW)
+    radio_tx.setPALevel(RF24_PA_MAX)
+    radio_rx.setPALevel(RF24_PA_MAX)
 
+    # Set radio data rate
+    if(rate == 1):
+        radio_tx.setDataRate(RF24_1MBPS)
+        radio_tx.setDataRate(RF24_1MBPS)
+    else:
+        radio_tx.setDataRate(RF24_2MBPS)
+        radio_tx.setDataRate(RF24_2MBPS)
+    
     # Disable auto ACK
     radio_tx.setAutoAck(False)
     radio_rx.setAutoAck(False)

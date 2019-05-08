@@ -11,7 +11,7 @@ from utils.ledManager import ledManager
 
 class Window(object):
 
-    def __init__(self, config_file):
+    def __init__(self, config_file, data_rate):
         self.PM = PacketManager(config_file)
         self.compression = self.PM.use_compression
         self.enable_print = False
@@ -26,11 +26,13 @@ class Window(object):
         self.fileout = "file0.txt"
         self.payload_size = self.PM.payload_size
         self.timeout_time = self.PM.config.timeout_time
+        self.data_rate = data_rate
+
 
     def rx(self):
         print("Started RX")
         # Initialize radio
-        radio_tx, radio_rx = configure_radios(self.channel2, self.channel1, 0)
+        radio_tx, radio_rx = configure_radios(self.channel2, self.channel1, 0, self.data_rate)
         radio_rx.startListening()
         radio_tx.stopListening()
 
@@ -164,7 +166,7 @@ class Window(object):
     def tx(self):
         print("Starting TX")
         # Start radios
-        radio_tx, radio_rx = configure_radios(self.channel1, self.channel2, 1)
+        radio_tx, radio_rx = configure_radios(self.channel1, self.channel2, 1, self.data_rate)
         radio_rx.startListening()
         radio_tx.stopListening()
 
