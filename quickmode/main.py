@@ -48,11 +48,11 @@ while(not end):
     # Select function
     function = buttons.getFunction()
     #function = 0
-    if(function == 0 and check_mode):
+    if(not function and check_mode):
         print('Receiver')
         window.rx()
         end = True
-    if(function == 1 and check_mode):
+    if(function and check_mode):
         print('Transmitter')
         window.tx()
         end = True
