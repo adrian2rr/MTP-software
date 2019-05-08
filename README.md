@@ -5,7 +5,6 @@ Few changes on trasmission and reception:
 The *packet_manager_simple* has been slightly modified to clean up the usage of the config file, it has been copied to **packet_manager_window.py**
 Now the Packet Manager reads from the (hardcoded) file "../configs/config_file.json" the input file, the payload and the timeout.
 
-Therefore calling rx and tx directly from the raspberry won't work.
 
 The new class Window reads the configuration from the Packet Manager and executes the transmission and reception.
 
