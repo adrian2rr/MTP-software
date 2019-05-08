@@ -26,7 +26,7 @@ while(not end):
 
     # Select mode
     # mode = buttons.getMode()
-	mode = 0
+    mode = 0
     if(mode == 0):
         print('Short Range mode')
         led.red()
@@ -42,7 +42,7 @@ while(not end):
 
     # Select function
     # function = buttons.getFunction()
-	function = 0
+    function = 0
     if(function == 0 and check_mode):
         print('Receiver')
         transceiver.receive(mode)
