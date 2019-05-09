@@ -18,42 +18,38 @@ buttons = buttonManager()
 led = ledManager()
 
 # Define end condition variables
-check_mode = True
 end = False
 
 while(not end):
-    # Set ready led
-    led.white()
-
+    # Turn off led 
+    led.off()
     # Select mode
     mode = buttons.getMode()
     #mode = 0
     if(mode == 0):
-        print('Short Range mode')
+        print('Short Range mode selected')
         window = Window.Window(args.config, 2)
-
-        led.red()
-        end
-    elif(mode == 1):
-        print('Midle Range mode')
+    if(mode == 1):
+        print('Midle Range mode selected')
         window = Window.Window(args.config, 1)
-
-        led.green()
-    elif(mode == 2):
-        print('Network mode: not implemented')
-        led.blue()
-    else:
-        check_mode = False
+    if(mode == 2):
+        print('Network mode selected: not implemented')
 
     # Select function
     function = buttons.getFunction()
-    #function = 0
-    if(not function and check_mode):
+    #function = False
+    if(not function):
         print('Receiver')
+        buttons.waitPressed()
+        print('Start button pressed')
+        led.white()
         window.rx()
         end = True
-    if(function and check_mode):
+    if(function):
         print('Transmitter')
+        buttons.waitPressed()
+        print('Start button pressed')
+        led.white()
         window.tx()
         end = True
 
