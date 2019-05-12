@@ -1,15 +1,20 @@
 import zlib
-import crc8
+import utils.config
 
 
 class PacketManager(object):
-    def __init__(self, document):
+    def __init__(self, config_file):
         super(PacketManager, self).__init__()
-        self.document = document
-        self.payload_size = 32
-        self.data_size = 30
-        self.use_compression = False
-        self.window_size = 32
+        self.config = utils.config.process_config(config_file)
+        self.document = self.config.document_path
+        self.payload_size = self.config.payload_size
+
+        # self.payload_size = 32
+        self.data_size = 31
+        self.use_compression = True
+        self.window_size = 31
+        self.compression_level = 6
+
     def create(self):
         packets = []
         with open(self.document, 'rb') as doc:
@@ -18,11 +23,10 @@ class PacketManager(object):
 
 
         data_to_tx_compressed = self._compress(data_to_tx)
-        
         fragments = self._fragment_file(data_to_tx_compressed)
 
         packet_number = len(fragments)
-        
+
         for frame_id, cf in enumerate(fragments):
             packet = self._create_packet(cf, frame_id, packet_number)
             packets.append(packet)
@@ -41,39 +45,30 @@ class PacketManager(object):
         fragments = self._fragment_file(data_to_tx_compressed)
 
         packet_number = len(fragments)
-        
+
         for fragment_id, cf in enumerate(fragments):
             packet = self._create_packet_window(cf, fragment_id, packet_number)
             packets.append(packet)
-        
-        # There could be cases in which the ratio packet_number/win_size is not an integer
-        padding_in_last_window = packet_number % self.window_size
-        # these packets below will not be decoded by the receiver
-        for i in range(padding_in_last_window):
-            pad_packet = [0] * self.payload_size
-            pad_packet = bytes(pad_packet)
-            packets.append(pad_packet)
 
+        # There could be cases in which the ratio packet_number/win_size is not an integer
+        # padding_in_last_window = packet_number % self.window_size
+        # # these packets below will not be decoded by the receiver
+        # for i in range(packet_number, padding_in_last_window+packet_number):
+        #     pad_packet = [0] * self.payload_size
+        #     pad_packet = bytes(pad_packet)
+        #     packets.append(pad_packet)
         return packets
 
 
-          
 
-    def _compress(self, data_to_compress, level = 9):
+
+    def _compress(self, data_to_compress):
         """
         Params: data_to_compress
                 level
         Return: A list with bytes to be tx
-        """ 
-        return zlib.compress(data_to_compress, level)
-
-    def _generate_crc(self, line):
-
-        crc = crc8.crc8()
-        crc.update(line)
-        # using digest() to return bites in the format b'\xfb'
-        # to get only the hexadecimal value 'fb' use hexdigest()
-        return crc.digest()
+        """
+        return zlib.compress(data_to_compress, self.compression_level)
 
     def _fragment_file(self, data_to_tx):
         """
@@ -106,10 +101,7 @@ class PacketManager(object):
         *----------------*
         | CRC-0B         |
         *----------------*
-        Header: Type_of_frame (ACK, NACK, DATA), Frame_ID, Payload_length, EOT (End of transmission)
-        Payload: Data
-        CRC:
-        :return:packet
+
         """
         # TODO: Rules of ifs so that the correct index is assigned to each flag
         # TODO: Last fragment should include padding
@@ -117,17 +109,17 @@ class PacketManager(object):
         header = []
 
         # Compute header parameters
-        if(frame_id == packet_number-1):
+        if(frame_id == packet_number - 1):
             eot = 1
         else:
             eot = 0
 
-        identifier=frame_id%2
+        identifier = frame_id % 2
 
         # Create header
         header = bytes([identifier])
-        header +=bytes([eot])
-        
+        header += bytes([eot])
+
         # Append header to data
         packet = header
         packet += compressed_fragment
@@ -140,20 +132,32 @@ class PacketManager(object):
         *-------------------------------------------------------------*
         | X X X X X X X X |                  DATA                     |
         *-------------------------------------------------------------*
-        | EOT (1b) - WIN_ID(7b) |            DATA                     |
+        | EOT (1b) - WN (1b) - WIN_ID(6b) |            DATA                     |
         *-------------------------------------------------------------*
-        Maximum window size = 127
+        EOT: End of file
+        WN: Window Number (0) or (1)
+        WIN_ID: 0..64
+        Maximum window size = 64
         """
         packet = []
         id_in_window = fragment_id % self.window_size
+
+        window_number = 0x00
+        if((fragment_id % (2 * self.window_size) >= self.window_size)):
+            window_number = 0x40
+
         eot = 0x00
         if(fragment_id == packet_number - 1):
             eot = 0x80
         # We do the OR so the eot is just the first bit instead of the whole byte
-        header = eot | id_in_window
+        header = eot | window_number
+        header = header | id_in_window
         packet = bytes([header])
         packet += compressed_fragment
+        #print(len(compressed_fragment))
+        #print(packet)
         return packet
+
 
 class PacketManagerAck(object):
 
@@ -163,4 +167,3 @@ class PacketManagerAck(object):
     def create(self):
         ack = bytes([0])
         return ack
-
