@@ -1,51 +1,57 @@
 import RPi.GPIO as GPIO
 
+# pin_green = 20
+pin_green = 19
+# pin_blue = 16
+pin_blue = 26
+pin_red = 21
+
 
 class ledManager:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
-        GPIO.setup(16,GPIO.OUT)
-        GPIO.setup(20,GPIO.OUT)
-        GPIO.setup(21,GPIO.OUT)
+        GPIO.setup(pin_blue, GPIO.OUT)
+        GPIO.setup(pin_green, GPIO.OUT)
+        GPIO.setup(pin_red, GPIO.OUT)
 
     def off(self):
-        GPIO.output(16, GPIO.LOW)
-        GPIO.output(20, GPIO.LOW)
-        GPIO.output(21, GPIO.LOW)
+        GPIO.output(pin_blue, GPIO.LOW)
+        GPIO.output(pin_green, GPIO.LOW)
+        GPIO.output(pin_red, GPIO.LOW)
 
     def green(self):
         self.off()
-        GPIO.output(20, GPIO.HIGH)
+        GPIO.output(pin_green, GPIO.HIGH)
 
     def blue(self):
         self.off()
-        GPIO.output(16, GPIO.HIGH)
+        GPIO.output(pin_blue, GPIO.HIGH)
 
     def red(self):
         self.off()
-        GPIO.output(21, GPIO.HIGH)
+        GPIO.output(pin_red, GPIO.HIGH)
 
     def blueGreen(self):
         self.off()
-        GPIO.output(20, GPIO.HIGH)
-        GPIO.output(16, GPIO.HIGH)
+        GPIO.output(pin_green, GPIO.HIGH)
+        GPIO.output(pin_blue, GPIO.HIGH)
 
     def violet(self):
         self.off()
-        GPIO.output(16, GPIO.HIGH)
-        GPIO.output(21, GPIO.HIGH)
+        GPIO.output(pin_blue, GPIO.HIGH)
+        GPIO.output(pin_red, GPIO.HIGH)
 
     def yellow(self):
         self.off()
-        GPIO.output(21, GPIO.HIGH)
-        GPIO.output(20, GPIO.HIGH)
+        GPIO.output(pin_red, GPIO.HIGH)
+        GPIO.output(pin_green, GPIO.HIGH)
 
     def white(self):
         self.off()
-        GPIO.output(16, GPIO.HIGH)
-        GPIO.output(20, GPIO.HIGH)
-        GPIO.output(21, GPIO.HIGH)
+        GPIO.output(pin_blue, GPIO.HIGH)
+        GPIO.output(pin_green, GPIO.HIGH)
+        GPIO.output(pin_red, GPIO.HIGH)
 
     def network_starting(self):
         self.off()
