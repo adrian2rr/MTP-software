@@ -4,6 +4,7 @@ from utils.buttonManager import buttonManager
 from window import Window
 from network_mode.network_mode import start as network_mode_start
 from RF24 import *
+import time
 
 config = None
 args = None
@@ -65,4 +66,5 @@ while not end:
         end = True"""
 
 # Set transmission finished led
-led.yellow()
+time.sleep(10)
+led.off()
