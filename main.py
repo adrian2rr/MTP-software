@@ -18,7 +18,7 @@ try:
         "Tx_CSN": BCM2835_SPI_CS1,
         "Rx_CS": RPI_V2_GPIO_P1_13,
         "Rx_CSN": BCM2835_SPI_CS0,
-        "Log_Level": logging.DEBUG
+        "Log_Level": logging.CRITICAL
     })
 except:
     print("missing or invalid arguments")
