@@ -1,4 +1,4 @@
-from utils import get_args, process_config
+from utils.config import get_args, process_config
 from utils.ledManager import ledManager
 from utils.buttonManager import buttonManager
 from window import Window
@@ -27,8 +27,8 @@ while not end:
     # Turn off led 
     led.off()
     # Select mode
-    mode = buttons.getMode()
-    # mode = 0
+    # mode = buttons.getMode()
+    mode = 2
     if mode == 0:
         print('Short Range mode selected')
         window = Window.Window(args.config, 2, led)
