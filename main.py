@@ -2,7 +2,7 @@ from utils.config import get_args, process_config
 from utils.ledManager import ledManager
 from utils.buttonManager import buttonManager
 from window import Window
-from network_mode import start as network_mode_start
+from network_mode.network_mode import start as network_mode_start
 
 config = None
 args = None
