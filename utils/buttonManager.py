@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from utils import ledManager
+# from utils import ledManager
 import time
 
 
@@ -10,7 +10,7 @@ class buttonManager:
         GPIO.setwarnings(False)
         GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(19, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        self.led = ledManager()
+        # self.led = ledManager()
         self.button_pressed = True
 
     def getMode(self):
