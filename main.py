@@ -5,6 +5,7 @@ from window import Window
 from network_mode.network_mode import start as network_mode_start
 from RF24 import *
 import time
+import logging
 
 config = None
 args = None
@@ -16,7 +17,9 @@ try:
         "Tx_CS": RPI_V2_GPIO_P1_15,
         "Tx_CSN": BCM2835_SPI_CS1,
         "Rx_CS": RPI_V2_GPIO_P1_13,
-        "Rx_CSN": BCM2835_SPI_CS0})
+        "Rx_CSN": BCM2835_SPI_CS0,
+        "Log_Level": logging.DEBUG
+    })
 except:
     print("missing or invalid arguments")
     exit(0)

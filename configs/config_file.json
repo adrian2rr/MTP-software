@@ -3,5 +3,6 @@
   "timeout_time": "500",
   "File_Path_Input": "/home/pi/mtp_software/files/charles_bridge.txt",
   "File_Path_Output": "/home/pi/mtp_software/files/file_network_rx.txt",
+  "Log_Path": "/home/pi/mtp_software/files/logger.log",
   "address": 1
 }
