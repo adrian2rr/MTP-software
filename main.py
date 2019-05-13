@@ -43,9 +43,10 @@ while not end:
     if mode == 2:
         print('Network mode selected')
         network_mode_start('tx', led, config)
+        end = True
 
     # Select function
-    function = buttons.getFunction()
+    """function = buttons.getFunction()
     # function = False
     if not function:
         print('Receiver')
@@ -61,7 +62,7 @@ while not end:
         print('Start button pressed')
         led.white()
         window.tx()
-        end = True
+        end = True"""
 
 # Set transmission finished led
 led.yellow()
