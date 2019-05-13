@@ -1,22 +1,18 @@
-from __future__ import print_function
 import time
 import zlib
 
-from utils.packet_manager_window import PacketManager, PacketManagerAck
-from utils.radio import configure_radios
-# from utils.config import get_args, process_config, payload_size
-# import utils.config
-from utils.ledManager import ledManager
+from window.utils.packet_manager_window import PacketManager, PacketManagerAck
+from window.utils.radio import configure_radios
 
 
 class Window(object):
 
-    def __init__(self, config_file, data_rate):
+    def __init__(self, config_file, data_rate, led):
         self.PM = PacketManager(config_file)
         self.compression = self.PM.use_compression
         self.enable_print = False
         self.millis = lambda: int(round(time.time() * 1000))
-        self.led = ledManager()
+        self.led = led
         # channel1: main channel of communication, from where the payload is sent
         self.channel1 = 60
         # channel2: channel used for the acks sent from the receiving device
@@ -27,7 +23,6 @@ class Window(object):
         self.payload_size = self.PM.payload_size
         self.timeout_time = self.PM.config.timeout_time
         self.data_rate = data_rate
-
 
     def rx(self):
         print("Started RX")

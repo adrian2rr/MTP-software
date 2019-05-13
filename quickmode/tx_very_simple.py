@@ -3,9 +3,9 @@ import time
 from RF24 import *
 
 from utils.packet_manager_simple import PacketManager
-from utils.radio import configure_radios
-from utils.config import get_args, process_config
-from utils.ledManager import ledManager
+from utils import configure_radios
+from utils import get_args, process_config
+from utils import ledManager
 
 try:
     args = get_args()

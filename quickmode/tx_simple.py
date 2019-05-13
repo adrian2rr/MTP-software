@@ -2,9 +2,9 @@ from __future__ import print_function
 import time
 from RF24 import *
 
-from utils.packet_manager import PacketManager
-from utils.radio import configure_radios
-from utils.config import get_args, process_config
+from utils import PacketManager
+from utils import configure_radios
+from utils import get_args, process_config
 
 irq_gpio_pin = None
 

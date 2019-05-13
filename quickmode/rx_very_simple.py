@@ -2,10 +2,10 @@ from __future__ import print_function
 import time
 # from RF24 import *
 import zlib
-from utils.radio import configure_radios
-from utils.config import get_args, process_config
+from utils import configure_radios
+from utils import get_args, process_config
 from utils.packet_manager_simple import PacketManagerAck
-from utils.ledManager import ledManager
+from utils import ledManager
 
 """
 TODO: Create packet manager that reassembles the packets instead of reassembling the packets in the last if
