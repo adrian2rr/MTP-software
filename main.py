@@ -3,6 +3,7 @@ from utils.ledManager import ledManager
 from utils.buttonManager import buttonManager
 from window import Window
 from network_mode.network_mode import start as network_mode_start
+from RF24 import *
 
 config = None
 args = None
@@ -10,7 +11,11 @@ args = None
 try:
     args = get_args()
     config = process_config(args.config)
-
+    config.update({
+        "Tx_CS": RPI_V2_GPIO_P1_15,
+        "Tx_CSN": BCM2835_SPI_CS1,
+        "Rx_CS": RPI_V2_GPIO_P1_13,
+        "Rx_CSN": BCM2835_SPI_CS0})
 except:
     print("missing or invalid arguments")
     exit(0)
