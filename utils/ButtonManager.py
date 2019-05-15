@@ -21,7 +21,7 @@ class ButtonManager:
     def get_mode(self, channel):
         start_time = time.time()
         now_time = start_time
-        while not GPIO.input(channel) and now_time - start_time < 4:
+        while not GPIO.input(channel) and now_time - start_time < 2:
             now_time = time.time()
         if now_time - start_time >= 0.3:
             if now_time - start_time >= 2:
