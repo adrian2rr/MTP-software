@@ -23,13 +23,14 @@ class ButtonManager:
         now_time = start_time
         while not GPIO.input(channel) and now_time - start_time < 4:
             now_time = time.time()
-        if now_time - start_time >= 4:
-            self.enter = not self.enter
-        else:
-            if self.enter:
-                self.start = True
+        if now_time - start_time >= 0.5:
+            if now_time - start_time >= 4:
+                self.enter = not self.enter
             else:
-                self.mode = self.mode + 1 if self.mode < 2 else 0
+                if self.enter:
+                    self.start = True
+                else:
+                    self.mode = self.mode + 1 if self.mode < 2 else 0
 
     def get_role(self, channel):
         self.role = 'rx' if GPIO.input(channel) else 'tx'
