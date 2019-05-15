@@ -11,8 +11,8 @@ class ButtonManager:
         GPIO.setwarnings(False)
         GPIO.setup(button_channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(switch_channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(button_channel, GPIO.FALLING, callback=self.get_mode, bouncetime=500)
-        GPIO.add_event_detect(switch_channel, GPIO.BOTH, callback=self.get_role, bouncetime=500)
+        GPIO.add_event_detect(button_channel, GPIO.FALLING, callback=self.get_mode)
+        GPIO.add_event_detect(switch_channel, GPIO.BOTH, callback=self.get_role)
         self.mode = 0
         self.enter = False
         self.role = 'tx'
@@ -23,7 +23,7 @@ class ButtonManager:
         now_time = start_time
         while not GPIO.input(channel) and now_time - start_time < 4:
             now_time = time.time()
-        if now_time - start_time >= 0.5:
+        if now_time - start_time >= 0.3:
             if now_time - start_time >= 4:
                 self.enter = not self.enter
             else:
