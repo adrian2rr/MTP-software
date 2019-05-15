@@ -35,7 +35,6 @@ end = False
 while not end:
 
     if buttons.start:
-        buttons.start = False
         led.off()
         if buttons.mode == 0:
             window = Window.Window(args.config, 2, led)
@@ -47,6 +46,7 @@ while not end:
             network_mode_start(buttons.role, led, config)
         elif buttons.mode == 2:
             end = True
+        buttons.start = False
 
     else:
         if buttons.enter:

@@ -23,7 +23,7 @@ class ButtonManager:
         now_time = start_time
         while not GPIO.input(channel) and now_time - start_time < 2:
             now_time = time.time()
-        if now_time - start_time >= 0.3:
+        if now_time - start_time >= 0.3 and not self.start:
             if now_time - start_time >= 2:
                 self.enter = not self.enter
             else:

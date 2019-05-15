@@ -4,7 +4,7 @@ import zlib
 class PacketManager(object):
     def __init__(self, config_file):
         super(PacketManager, self).__init__()
-        self.config = window.utils.config.process_config(config_file)
+        self.config = config_file
         self.document = self.config.document_path
         self.payload_size = self.config.payload_size
 
