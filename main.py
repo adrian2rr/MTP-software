@@ -37,7 +37,7 @@ while not end:
     if buttons.start:
         led.off()
         if buttons.mode == 0:
-            window = Window.Window(args.config, 2, led)
+            window = Window.Window(config, 2, led)
             if buttons.role == 'tx':
                 window.tx()
             else:
