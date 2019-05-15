@@ -15,7 +15,7 @@ class ButtonManager:
         GPIO.add_event_detect(switch_channel, GPIO.BOTH, callback=self.get_role)
         self.mode = 0
         self.enter = False
-        self.role = 'tx'
+        self.role = 'rx' if GPIO.input(switch_channel) else 'tx'
         self.start = False
 
     def get_mode(self, channel):
