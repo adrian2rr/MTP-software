@@ -1,11 +1,11 @@
 from utils.config import get_args, process_config
-from utils.ledManager import ledManager
-from utils.buttonManager import buttonManager
+from utils.LedManager import LedManager
+from utils.ButtonManager import ButtonManager
 from window import Window
 from network_mode.network_mode import start as network_mode_start
 from RF24 import *
-import time
 import logging
+import subprocess
 
 config = None
 args = None
@@ -26,48 +26,44 @@ except:
 
 
 # Initialize buttons and leds
-buttons = buttonManager()
-led = ledManager()
+buttons = ButtonManager()
+led = LedManager()
 
 # Define end condition variables
 end = False
 
 while not end:
-    # Turn off led 
-    led.off()
-    # Select mode
-    # mode = buttons.getMode()
-    mode = 2
-    if mode == 0:
-        print('Short Range mode selected')
-        window = Window.Window(args.config, 2, led)
-    if mode == 1:
-        print('Midle Range mode selected')
-        window = Window.Window(args.config, 1, led)
-    if mode == 2:
-        print('Network mode selected')
-        network_mode_start('tx', led, config)
-        end = True
 
-    # Select function
-    """function = buttons.getFunction()
-    # function = False
-    if not function:
-        print('Receiver')
-        buttons.waitPressed()
-        print('Start button pressed')
-        led.white()
-        window.rx()
-        end = True
+    if buttons.start:
+        buttons.start = False
+        led.off()
+        if buttons.mode == 0:
+            window = Window.Window(args.config, 2, led)
+            if buttons.role == 'tx':
+                window.tx()
+            else:
+                window.rx()
+        elif buttons.mode == 1:
+            network_mode_start(buttons.role, led, config)
+        elif buttons.mode == 2:
+            end = True
 
-    if function:
-        print('Transmitter')
-        buttons.waitPressed()
-        print('Start button pressed')
-        led.white()
-        window.tx()
-        end = True"""
+    else:
+        if buttons.enter:
+            if buttons.mode == 2:
+                led.green()
+            else:
+                if buttons.role == 'tx':
+                    led.yellow()
+                else:
+                    led.blue()
+        else:
+            if buttons.mode == 0:
+                led.violet()
+            elif buttons.mode == 1:
+                led.white()
+            elif buttons.mode == 2:
+                led.red()
 
-# Set transmission finished led
-time.sleep(10)
-led.off()
+led.red()
+subprocess.call(["sudo", "poweroff"])
