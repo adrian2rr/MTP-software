@@ -12,7 +12,7 @@ class ButtonManager:
         GPIO.setup(button_channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(switch_channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(button_channel, GPIO.FALLING, callback=self.get_mode, bouncetime=200)
-        GPIO.add_event_callback(switch_channel, self.get_role, bouncetime=200)
+        GPIO.add_event_callback(switch_channel, self.get_role)
         self.mode = 0
         self.enter = False
         self.role = 'tx'
@@ -32,4 +32,4 @@ class ButtonManager:
                 self.mode = self.mode + 1 if self.mode < 2 else 0
 
     def get_role(self, channel):
-        self.role = 'rx' if self.role == 'tx' else 'tx'
+        self.role = 'rx' if GPIO.input(channel) else 'tx'
