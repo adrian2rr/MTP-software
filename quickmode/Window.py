@@ -23,7 +23,7 @@ class Window(object):
         self.channel2 = 70
         self.WINDOW_SIZE = self.PM.window_size
         self.data_size = self.PM.data_size
-        self.fileout = "file0.txt"
+        self.fileout = "/home/pi/file0.txt"
         self.payload_size = self.PM.payload_size
         self.timeout_time = self.PM.config.timeout_time
         self.data_rate = data_rate
