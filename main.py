@@ -6,6 +6,7 @@ from network_mode.network_mode import start as network_mode_start
 from RF24 import *
 import logging
 import subprocess
+import time
 
 config = None
 args = None
@@ -42,6 +43,7 @@ while not end:
             window.start()
         elif buttons.mode == 1:
             network_mode_start(buttons.role, led, config)
+            time.sleep(4)
         elif buttons.mode == 2:
             end = True
         buttons.start = False
