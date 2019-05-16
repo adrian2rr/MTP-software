@@ -1,5 +1,6 @@
 {
   "document_path": "/home/pi/mtp_software/files/redundant.txt",
+  "out_path": "/home/pi/mtp_software/files/file_out_",
   "timeout_time": "500",
   "File_Path_Input": "/home/pi/mtp_software/files/charles_bridge.txt",
   "File_Path_Output": "/home/pi/mtp_software/files/file_network_rx.txt",

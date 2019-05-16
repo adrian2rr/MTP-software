@@ -1,7 +1,7 @@
 from utils.config import get_args, process_config
 from utils.LedManager import LedManager
 from utils.ButtonManager import ButtonManager
-from window import Window
+from window.Window import Node as window
 from network_mode.network_mode import start as network_mode_start
 from RF24 import *
 import logging
@@ -38,11 +38,8 @@ while not end:
     if buttons.start:
         led.off()
         if buttons.mode == 0:
-            window = Window.Window(config, 2, led)
-            if buttons.role == 'tx':
-                window.tx()
-            else:
-                window.rx()
+            window = window(config, led, buttons.role)
+            window.start()
         elif buttons.mode == 1:
             network_mode_start(buttons.role, led, config)
         elif buttons.mode == 2:
