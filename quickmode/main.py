@@ -1,7 +1,5 @@
-from utils.ledManager import ledManager
-from utils.buttonManager import buttonManager
-from utils.config import get_args
-import Window
+from utils import ledManager, buttonManager
+from window.utils import get_args
 
 # Get arguments and initialize transceiver
 try:

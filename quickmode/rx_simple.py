@@ -2,9 +2,9 @@ from __future__ import print_function
 import time
 from RF24 import *
 
-from utils.radio import configure_radios
-from utils.config import get_args, process_config
-from utils.packet_manager import PacketManagerAck
+from utils import configure_radios
+from utils import get_args, process_config
+from utils import PacketManagerAck
 
 ########### USER CONFIGURATION ###########
 # See https://github.com/TMRh20/RF24/blob/master/pyRF24/readme.md

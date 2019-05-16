@@ -4,11 +4,8 @@ import zlib
 class PacketManager(object):
     def __init__(self, config_file):
         super(PacketManager, self).__init__()
-        self.config = window.utils.config.process_config(config_file)
+        self.config = config_file
         self.document = self.config.document_path
-        self.payload_size = self.config.payload_size
-
-        # self.payload_size = 32
         self.data_size = 31
         self.use_compression = True
         self.window_size = 31

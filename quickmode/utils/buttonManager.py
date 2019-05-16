@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from utils.ledManager import ledManager
+from utils import ledManager
 import time
 
 
