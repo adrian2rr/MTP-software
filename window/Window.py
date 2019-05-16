@@ -19,7 +19,7 @@ class Window(object):
         self.channel2 = 70
         self.WINDOW_SIZE = self.PM.window_size
         self.data_size = self.PM.data_size
-        self.fileout = "file0.txt"
+        self.fileout = "/home/pi/mtp_software/files/short_range_output.txt"
         self.timeout_time = self.PM.config.timeout_time
         self.data_rate = data_rate
 
@@ -39,7 +39,7 @@ class Window(object):
         packet_manager_ack = PacketManagerAck()
         packet_manager_ack.create()
 
-        self.led.blue()
+        self.led.green()
 
         loop = True
         window_old = -1
@@ -173,7 +173,7 @@ class Window(object):
         packets = self.PM.create_window()
 
         # Define loop variables
-        self.led.violet()
+        self.led.green()
 
         # We'll have tot_packets/WINDOW_SIZE windows sent, in each window we'll send WINDOW_SIZE packets
         tot_packets = len(packets)
