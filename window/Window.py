@@ -69,6 +69,8 @@ class Node:
                     self.timeout = threading.Timer(self.timeout_tx, self.repeat_tx)
 
         GPIO.remove_event_detect(irq_rx)
+        self.led.green()
+        time.sleep(4)
 
     def receiver_rx(self, channel):
         length = self.receiver.getDynamicPayloadSize()
