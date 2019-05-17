@@ -19,7 +19,7 @@ class Window(object):
         self.channel2 = 68
         self.WINDOW_SIZE = self.PM.window_size
         self.data_size = self.PM.data_size
-        self.fileout = "/home/pi/mtp_software/files/short_range_output.txt"
+        self.fileout = "/home/pi/mtp_software/files/short_range_output" + str(round(time.time())) + '.txt'
         self.timeout_time = self.PM.config.timeout_time
         self.data_rate = data_rate
 
