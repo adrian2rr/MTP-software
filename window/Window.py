@@ -73,34 +73,35 @@ class Node:
         time.sleep(4)
 
     def receiver_rx(self, channel):
-        length = self.receiver.getDynamicPayloadSize()
-        packet = self.receiver.read(length)
-        header = packet[0]
-        window_e = 0x40 & header
-        frame_id = int(0x3f & header)
-        eot = 0x80 & header
+        while self.receiver.available():
+            length = self.receiver.getDynamicPayloadSize()
+            packet = self.receiver.read(length)
+            header = packet[0]
+            window_e = 0x40 & header
+            frame_id = int(0x3f & header)
+            eot = 0x80 & header
 
-        error = False
+            error = False
 
-        if self.timeout:
-            self.timeout.cancel()
+            if self.timeout:
+                self.timeout.cancel()
 
-        if self.last_packet and self.last_packet == packet:
-            self.tx_packets.append(bytes([header]))
+            if self.last_packet and self.last_packet == packet:
+                self.tx_packets.append(bytes([header]))
 
-        else:
-            self.last_packet = None
+            else:
+                self.last_packet = None
 
-            self.window[frame_id] = packet[1:length]
+                self.window[frame_id] = packet[1:length]
 
-            for i in range(0, frame_id):
-                if not self.window[i]:
-                    error = True
-                    packet = bytes([i])
-                    self.tx_packets.append(packet)
+                for i in range(0, frame_id):
+                    if not self.window[i]:
+                        error = True
+                        packet = bytes([i])
+                        self.tx_packets.append(packet)
 
-            if not error and window_e:
-                self.process_final_window(packet, header, eot)
+                if not error and window_e:
+                    self.process_final_window(packet, header, eot)
 
     def process_final_window(self, packet, header, eot):
         self.last_packet = packet
@@ -129,27 +130,28 @@ class Node:
         self.loop = False
 
     def receiver_tx(self, channel):
-        length = self.receiver.getDynamicPayloadSize()
-        packet = self.receiver.read(length)
-        header = packet[0]
-        window_e = 0x40 & header
-        frame_id = int(0x3f & header)
-        eot = 0x80 & header
+        while self.receiver.available():
+            length = self.receiver.getDynamicPayloadSize()
+            packet = self.receiver.read(length)
+            header = packet[0]
+            window_e = 0x40 & header
+            frame_id = int(0x3f & header)
+            eot = 0x80 & header
 
-        if not window_e:
-            self.tx_packets.insert(0, self.window[frame_id])
-
-        else:
-            self.timeout.cancel()
-            self.timeout = None
-
-            if not eot:
-                self.window_index += 1
-                self.window = self.file[self.window_index * self.window_size:(self.window_index + 1) * self.window_size]
-                self.tx_packets = self.window
+            if not window_e:
+                self.tx_packets.insert(0, self.window[frame_id])
 
             else:
-                self.loop = False
+                self.timeout.cancel()
+                self.timeout = None
+
+                if not eot:
+                    self.window_index += 1
+                    self.window = self.file[self.window_index * self.window_size:(self.window_index + 1) * self.window_size]
+                    self.tx_packets = self.window
+
+                else:
+                    self.loop = False
 
     def repeat_tx(self):
         self.tx_packets.append(self.window[-1])
