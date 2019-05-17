@@ -14,9 +14,9 @@ class Window(object):
         self.millis = lambda: int(round(time.time() * 1000))
         self.led = led
         # channel1: main channel of communication, from where the payload is sent
-        self.channel1 = 60
+        self.channel1 = 62
         # channel2: channel used for the acks sent from the receiving device
-        self.channel2 = 70
+        self.channel2 = 68
         self.WINDOW_SIZE = self.PM.window_size
         self.data_size = self.PM.data_size
         self.fileout = "/home/pi/mtp_software/files/short_range_output.txt"
